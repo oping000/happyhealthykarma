@@ -3,7 +3,7 @@
 
   <!-- Main page -->
   <url>
-    <loc>https://happyhealthykarma.netlify.app/</loc>
+    <loc>https://happyhealthykarma.vercel.app/</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -11,49 +11,49 @@
 
   <!-- Condition searches - Physical Health -->
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=ear+pain</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=ear+pain</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=back+pain</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=back+pain</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=eye+problems</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=eye+problems</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=heart+issues</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=heart+issues</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=skin+problems</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=skin+problems</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=stomach+pain</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=stomach+pain</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=child+health</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=child+health</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=general+checkup</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=general+checkup</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -61,25 +61,25 @@
 
   <!-- Condition searches - Mental Health -->
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=anxiety</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=anxiety</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=depression</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=depression</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=stress</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=stress</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://happyhealthykarma.netlify.app/?condition=couples+therapy</loc>
+    <loc>https://happyhealthykarma.vercel.app/?condition=couples+therapy</loc>
     <lastmod>2025-06-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
