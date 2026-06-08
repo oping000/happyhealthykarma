@@ -375,10 +375,9 @@ function doSearch(info, lat, lng) {
     'node["healthcare"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
     ');out body;>;out skel qt;';
 
-  fetch('/api/overpass', {
+  fetch('https://overpass-api.de/api/interpreter', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query: query })
+    body: 'data=' + encodeURIComponent(query)
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
