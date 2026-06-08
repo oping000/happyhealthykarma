@@ -9,15 +9,44 @@ export default async function handler(req, res) {
 
   try {
     const { query } = req.body;
-    const response = await fetch('https://overpass-api.de/api/interpreter', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'data=' + encodeURIComponent(query)
-    });
+    
+    // Try multiple Overpass endpoints
+    const endpoints = [
+      'https://overpass-api.de/api/interpreter',
+      'https://overpass.kumi.systems/api/interpreter',
+      'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
+    ];
 
-    const data = await response.json();
-    res.status(200).json(data);
+    let data = null;
+    let lastError = null;
+
+    for (const endpoint of endpoints) {
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': 'HappyHealthyKarma/1.0'
+          },
+          body: 'data=' + encodeURIComponent(query)
+        });
+        
+        if (response.ok) {
+          data = await response.json();
+          break;
+        }
+      } catch (err) {
+        lastError = err;
+        continue;
+      }
+    }
+
+    if (data) {
+      res.status(200).json(data);
+    } else {
+      res.status(500).json({ error: 'All endpoints failed', details: lastError?.message });
+    }
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch from Overpass API' });
+    res.status(500).json({ error: error.message });
   }
 }
