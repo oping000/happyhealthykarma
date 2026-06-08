@@ -6,8 +6,8 @@
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-LY4F041R4K');
+  gtag("js", new Date());
+  gtag("config", "G-LY4F041R4K");
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -129,6 +129,11 @@ nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
 .cat-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
 .category-card.mental-cat { border-color: #E9D5FF; }
 .category-card.mental-cat:hover { border-color: #7C3AED; background: #F5F3FF; }
+
+.affiliate-banner { background: linear-gradient(135deg, #4C1D95, #6D28D9); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem; display: none; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.affiliate-banner.show { display: flex; }
+.affiliate-btn { background: var(--white); color: #6D28D9; border: none; border-radius: 10px; padding: 0.75rem 1.5rem; font-family: "DM Sans", sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap; transition: all 0.2s; }
+.affiliate-btn:hover { background: #F5F3FF; }
 footer { background: var(--green); color: rgba(255,255,255,0.8); text-align: center; padding: 2rem; font-size: 0.8rem; margin-top: 3rem; }
 footer a { color: var(--mint); text-decoration: none; }
 @media (max-width: 600px) { .search-row { flex-direction: column; } nav { display: none; } .hero { padding: 2.5rem 1rem 2rem; } }
@@ -191,6 +196,14 @@ footer a { color: var(--mint); text-decoration: none; }
     </a>
   </div>
 
+  
+  <div id="affiliateBanner" class="affiliate-banner">
+    <div>
+      <h3 style="font-family:Fraunces,serif;font-size:1.2rem;font-weight:400;color:white;margin-bottom:0.3rem">💬 Online Therapy — From the Comfort of Home</h3>
+      <p style="color:rgba(255,255,255,0.8);font-size:0.85rem">Licensed therapists available via video, voice & text. CBT-based programs starting at 0/week.</p>
+    </div>
+    <a href="https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174" target="_blank" class="affiliate-btn">Get 20% Off First Month →</a>
+  </div>
   <div id="resultsSection" style="display:none">
     <div class="results-header">
       <div>
@@ -323,6 +336,7 @@ function searchProviders() {
   document.getElementById('emptyState').classList.remove('show');
   document.getElementById('loadingState').classList.add('show');
   document.getElementById('mentalHealthBanner').style.display = info.mental ? 'flex' : 'none';
+  if(info.mental) { document.getElementById('affiliateBanner').classList.add('show'); } else { document.getElementById('affiliateBanner').classList.remove('show'); }
 
   if (location) {
     fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(location) + '&format=json&limit=1')
