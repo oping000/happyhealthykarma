@@ -366,33 +366,75 @@ function searchProviders() {
 }
 
 function doSearch(info, lat, lng) {
-  var radius = 10000;
-  var query = '[out:json][timeout:25];(' +
-    'node["amenity"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
-    'way["amenity"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
-    'node["amenity"="clinic"](around:' + radius + ',' + lat + ',' + lng + ');' +
-    'node["amenity"="hospital"](around:' + radius + ',' + lat + ',' + lng + ');' +
-    'node["healthcare"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
-    ');out body;>;out skel qt;';
+  var searches = [
+    'https://nominatim.openstreetmap.org/search?format=json&limit=20&amenity=' + info.amenity + '&lat=' + lat + '&lon=' + lng + '&radius=10000&addressdetails=1',
+    'https://nominatim.openstreetmap.org/search?format=json&limit=20&q=' + encodeURIComponent(info.query) + '&lat=' + lat + '&lon=' + lng + '&bounded=0&addressdetails=1',
+    'https://nominatim.openstreetmap.org/search?format=json&limit=20&q=' + encodeURIComponent(info.query + ' clinic') + '&lat=' + lat + '&lon=' + lng + '&bounded=0&addressdetails=1'
+  ];
 
-  fetch('https://overpass-api.de/api/interpreter', {
-    method: 'POST',
-    body: 'data=' + encodeURIComponent(query)
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    document.getElementById('loadingState').classList.remove('show');
-    var results = (data.elements || []).filter(function(el) { return el.tags && el.tags.name; });
-    if (results.length > 0) {
-      allResults = results;
-      renderResults(results, info, lat, lng);
-    } else {
-      showEmpty('No providers found nearby. Try a different condition or location.');
-    }
-  })
-  .catch(function() {
-    document.getElementById('loadingState').classList.remove('show');
-    showEmpty('Search error. Please try again in a moment.');
+  var allFound = [];
+  var completed = 0;
+
+  searches.forEach(function(url) {
+    fetch(url, { headers: { 'Accept-Language': 'en' } })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        data.forEach(function(item) {
+          if (item.display_name && !allFound.find(function(f) { return f.place_id === item.place_id; })) {
+            allFound.push(item);
+          }
+        });
+        completed++;
+        if (completed === searches.length) {
+          document.getElementById('loadingState').classList.remove('show');
+          if (allFound.length > 0) {
+            var results = allFound.map(function(item) {
+              var addr = item.address || {};
+              return {
+                tags: {
+                  name: item.display_name.split(',')[0],
+                  'addr:street': (addr.road || ''),
+                  'addr:city': (addr.city || addr.town || addr.village || ''),
+                  phone: '',
+                  website: ''
+                },
+                lat: parseFloat(item.lat),
+                lon: parseFloat(item.lon)
+              };
+            });
+            allResults = results;
+            renderResults(results, info, lat, lng);
+          } else {
+            showEmpty('No providers found nearby. Try a different condition or location.');
+          }
+        }
+      })
+      .catch(function() {
+        completed++;
+        if (completed === searches.length) {
+          document.getElementById('loadingState').classList.remove('show');
+          if (allFound.length > 0) {
+            var results = allFound.map(function(item) {
+              var addr = item.address || {};
+              return {
+                tags: {
+                  name: item.display_name.split(',')[0],
+                  'addr:street': (addr.road || ''),
+                  'addr:city': (addr.city || addr.town || addr.village || ''),
+                  phone: '',
+                  website: ''
+                },
+                lat: parseFloat(item.lat),
+                lon: parseFloat(item.lon)
+              };
+            });
+            allResults = results;
+            renderResults(results, info, lat, lng);
+          } else {
+            showEmpty('Search error. Please try again in a moment.');
+          }
+        }
+      });
   });
 }
 
