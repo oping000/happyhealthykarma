@@ -368,9 +368,9 @@ function doSearch(info, lat, lng) {
     'node["healthcare"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
     ');out body;>;out skel qt;';
 
-  fetch('https://corsproxy.io/?https://overpass-api.de/api/interpreter', {
-    method: 'POST',
-    body: 'data=' + encodeURIComponent(query)
+  fetch('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query), {
+    method: 'GET',
+    mode: 'cors'
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
