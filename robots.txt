@@ -5,4 +5,4 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://happyhealthykarma.vercel.app/sitemap.xml
+Sitemap: https://happyhealthykarma.com/sitemap.xml
