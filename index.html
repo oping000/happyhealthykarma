@@ -6,9 +6,10 @@
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag("js", new Date());
-  gtag("config", "G-LY4F041R4K");
+  gtag('js', new Date());
+  gtag('config', 'G-LY4F041R4K');
 </script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Primary SEO -->
@@ -134,7 +135,6 @@ nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
 .affiliate-banner.show { display: flex; }
 .affiliate-btn { background: #6D28D9; color: white; border: none; border-radius: 10px; padding: 0.75rem 1.5rem; font-family: "DM Sans", sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap; transition: all 0.2s; }
 .affiliate-btn:hover { background: #4C1D95; }
-.therapy-code { background: white; border: 2px solid #6D28D9; border-radius: 8px; padding: 0.4rem 1rem; font-weight: 700; color: #6D28D9; font-size: 0.9rem; letter-spacing: 0.05em; }
 footer { background: var(--green); color: rgba(255,255,255,0.8); text-align: center; padding: 2rem; font-size: 0.8rem; margin-top: 3rem; }
 footer a { color: var(--mint); text-decoration: none; }
 @media (max-width: 600px) { .search-row { flex-direction: column; } nav { display: none; } .hero { padding: 2.5rem 1rem 2rem; } }
@@ -197,11 +197,11 @@ footer a { color: var(--mint); text-decoration: none; }
     </a>
   </div>
 
-  
-    <div id="affiliateBanner" class="affiliate-banner">
+
+  <div id="affiliateBanner" class="affiliate-banner">
     <div style="flex:1">
-      <h3 style="font-family:Fraunces,serif;font-size:1.2rem;font-weight:600;color:#4C1D95;margin-bottom:0.4rem">💻 Can't find a local therapist?</h3>
-      <p style="color:#6D28D9;font-size:0.85rem;margin-bottom:0.6rem">Get matched with a licensed online therapist — from the comfort of home.</p>
+      <h3 style="font-family:Fraunces,serif;font-size:1.2rem;font-weight:600;color:#4C1D95;margin-bottom:0.4rem">&#x1F4BB; Can't find a local therapist?</h3>
+      <p style="color:#6D28D9;font-size:0.85rem;margin-bottom:0.6rem">Get matched with a licensed online therapist &mdash; from the comfort of home.</p>
       <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
         <span style="background:#6D28D9;color:white;border-radius:20px;padding:0.25rem 0.75rem;font-size:0.75rem">&#10003; Licensed Therapists</span>
         <span style="background:#6D28D9;color:white;border-radius:20px;padding:0.25rem 0.75rem;font-size:0.75rem">&#10003; Video, Voice &amp; Text</span>
@@ -211,10 +211,17 @@ footer a { color: var(--mint); text-decoration: none; }
     <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem">
       <div style="font-size:0.75rem;color:#6D28D9">Use code for 20% off:</div>
       <div style="background:white;border:2px solid #6D28D9;border-radius:8px;padding:0.4rem 1rem;font-weight:700;color:#6D28D9;font-size:0.9rem;letter-spacing:0.05em">THERAPY20</div>
-      <a href="https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174" target="_blank" class="affiliate-btn">Get Started &#8594;</a>
+      <a href="https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174" target="_blank" class="affiliate-btn">Get Started &rarr;</a>
       <div style="font-size:0.7rem;color:#9CA3AF">Sponsored</div>
     </div>
   </div>
+
+  <div id="resultsSection" style="display:none">
+    <div class="results-header">
+      <div>
+        <div class="section-title" id="resultsTitle">Providers near you</div>
+        <div class="results-count" id="resultsCount"></div>
+      </div>
       <div class="filter-tabs">
         <button class="filter-tab active" onclick="setFilter('all',this)">All</button>
         <button class="filter-tab" onclick="setFilter('mental',this)">Mental Health</button>
@@ -368,10 +375,7 @@ function doSearch(info, lat, lng) {
     'node["healthcare"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
     ');out body;>;out skel qt;';
 
-  fetch('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query), {
-    method: 'GET',
-    mode: 'cors'
-  })
+  fetch('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query))
   .then(function(r) { return r.json(); })
   .then(function(data) {
     document.getElementById('loadingState').classList.remove('show');
