@@ -419,8 +419,25 @@ function doSearch(info, lat, lng) {
 
   var seen = {};
   var merged = [];
+  var overpassDone = false;
 
-  function mergeAndRender(newResults) {
+  function showLoadingMore() {
+    var existing = document.getElementById('loadingMoreIndicator');
+    if (!existing) {
+      var el = document.createElement('p');
+      el.id = 'loadingMoreIndicator';
+      el.style.cssText = 'text-align:center;color:var(--text-muted);font-size:0.85rem;padding:1rem;grid-column:1/-1';
+      el.innerHTML = '<span style="display:inline-block;width:12px;height:12px;border:2px solid var(--mint);border-top-color:var(--green);border-radius:50%;animation:spin 0.8s linear infinite;margin-right:0.5rem;vertical-align:middle"></span>Loading more providers...';
+      document.getElementById('resultsGrid').appendChild(el);
+    }
+  }
+
+  function hideLoadingMore() {
+    var el = document.getElementById('loadingMoreIndicator');
+    if (el) el.remove();
+  }
+
+  function mergeAndRender(newResults, isOverpass) {
     var added = false;
     newResults.forEach(function(r) {
       if (merged.length >= 25) return;
@@ -431,26 +448,43 @@ function doSearch(info, lat, lng) {
       document.getElementById('loadingState').classList.remove('show');
       allResults = merged.slice();
       renderResults(merged, info, lat, lng);
+      if (!isOverpass && !overpassDone) showLoadingMore();
     }
+    if (isOverpass) { overpassDone = true; hideLoadingMore(); }
   }
 
-  // Show HERE Maps results immediately when ready
+  // Show HERE Maps results immediately
   herePromise.then(function(hereResults) {
-    if (hereResults.length > 0) mergeAndRender(hereResults);
+    if (hereResults.length > 0) mergeAndRender(hereResults, false);
   });
+
+  // 3 second timeout for Overpass — if too slow, hide the indicator
+  var overpassTimeout = setTimeout(function() {
+    if (!overpassDone) {
+      overpassDone = true;
+      hideLoadingMore();
+    }
+  }, 3000);
 
   // Add Overpass results when they arrive
   overpassPromise.then(function(overpassResults) {
+    clearTimeout(overpassTimeout);
     if (overpassResults.length > 0) {
-      mergeAndRender(overpassResults);
-    } else if (merged.length === 0) {
-      document.getElementById('loadingState').classList.remove('show');
-      showEmpty('No providers found nearby. Try a different condition or location.');
+      mergeAndRender(overpassResults, true);
+    } else {
+      overpassDone = true;
+      hideLoadingMore();
+      if (merged.length === 0) {
+        document.getElementById('loadingState').classList.remove('show');
+        showEmpty('No providers found nearby. Try a different condition or location.');
+      }
     }
   });
 
   // Fallback if both fail
   Promise.all([herePromise, overpassPromise]).then(function() {
+    clearTimeout(overpassTimeout);
+    hideLoadingMore();
     if (merged.length === 0) {
       document.getElementById('loadingState').classList.remove('show');
       showEmpty('No providers found nearby. Try a different condition or location.');
