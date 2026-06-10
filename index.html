@@ -337,20 +337,20 @@ function searchProviders() {
 }
 
 function doSearch(info, lat, lng) {
+  var HERE_API_KEY = 'dRnx8Wnk1r2SixL-wprqk1BdxYvBFdd0HmgUQXAcP5w';
   var radius = 10000;
-  var query = '[out:json][timeout:25];(' +
-    'node["amenity"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
-    'way["amenity"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
-    'node["amenity"="clinic"](around:' + radius + ',' + lat + ',' + lng + ');' +
-    'node["amenity"="hospital"](around:' + radius + ',' + lat + ',' + lng + ');' +
-    'node["healthcare"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
-    ');out body;>;out skel qt;';
+  var url = 'https://discover.search.hereapi.com/v1/discover' +
+    '?at=' + lat + ',' + lng +
+    '&q=' + encodeURIComponent(info.query) +
+    '&limit=20' +
+    '&in=circle:' + lat + ',' + lng + ';r=' + radius +
+    '&apikey=' + HERE_API_KEY;
 
-  fetch('https://hhk-overpass-proxy.oping00.workers.dev/?data=' + encodeURIComponent(query))
+  fetch(url)
   .then(function(r) { return r.json(); })
   .then(function(data) {
     document.getElementById('loadingState').classList.remove('show');
-    var results = (data.elements || []).filter(function(el) { return el.tags && el.tags.name; });
+    var results = (data.items || []).filter(function(item) { return item.title; });
     if (results.length > 0) {
       allResults = results;
       renderResults(results, info, lat, lng);
@@ -368,49 +368,52 @@ function renderResults(results, info, centerLat, centerLng) {
   document.getElementById('resultsTitle').textContent = info.specialty + ' near you';
   document.getElementById('resultsCount').textContent = results.length + ' providers found';
 
-  initMap(centerLat || results[0].lat, centerLng || results[0].lon);
+  var firstLat = centerLat || (results[0].position && results[0].position.lat) || 0;
+  var firstLng = centerLng || (results[0].position && results[0].position.lng) || 0;
+  initMap(firstLat, firstLng);
 
   if (map) {
     map.eachLayer(function(layer) { if (layer instanceof L.Marker) map.removeLayer(layer); });
     var bounds = [];
     results.forEach(function(place) {
-      var lat = place.lat || (place.center && place.center.lat);
-      var lng = place.lon || (place.center && place.center.lon);
+      var lat = place.position && place.position.lat;
+      var lng = place.position && place.position.lng;
       if (!lat || !lng) return;
       var color = info.mental ? '#6B21A8' : '#2D6A4F';
       var icon = L.divIcon({
         html: '<div style="background:' + color + ';width:14px;height:14px;border-radius:50%;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3)"></div>',
         className: '', iconSize: [14, 14], iconAnchor: [7, 7]
       });
-      L.marker([lat, lng], { icon: icon }).addTo(map).bindPopup('<strong>' + place.tags.name + '</strong><br>' + (place.tags['addr:street'] || ''));
+      L.marker([lat, lng], {icon: icon}).addTo(map).bindPopup('<strong>' + place.title + '</strong><br>' + (place.address && place.address.label || ''));
       bounds.push([lat, lng]);
     });
-    if (bounds.length > 0) setTimeout(function() { map.fitBounds(bounds, { padding: [30, 30] }); }, 300);
+    if (bounds.length > 0) setTimeout(function() { map.fitBounds(bounds, {padding: [30, 30]}); }, 300);
   }
 
   document.getElementById('resultsGrid').innerHTML = results.map(function(p) {
-    var tags = p.tags || {};
-    var lat = p.lat || (p.center && p.center.lat) || 0;
-    var lng = p.lon || (p.center && p.center.lon) || 0;
-    var address = '';
-    if (tags['addr:street']) address = tags['addr:street'] + (tags['addr:housenumber'] ? ' ' + tags['addr:housenumber'] : '');
-    else if (tags['addr:city']) address = tags['addr:city'];
-    else address = 'Address not available';
-    var phone = tags.phone || tags['contact:phone'] || '';
+    var lat = p.position && p.position.lat || 0;
+    var lng = p.position && p.position.lng || 0;
+    var address = p.address && p.address.label || 'Address not available';
+    var phone = p.contacts && p.contacts[0] && p.contacts[0].phone && p.contacts[0].phone[0] && p.contacts[0].phone[0].value || '';
+    var website = p.contacts && p.contacts[0] && p.contacts[0].www && p.contacts[0].www[0] && p.contacts[0].www[0].value || '';
+    var hours = p.openingHours && p.openingHours[0] && p.openingHours[0].text && p.openingHours[0].text[0] || '';
+    var googleMapsUrl = 'https://www.google.com/maps/search/' + encodeURIComponent(p.title) + '/@' + lat + ',' + lng + ',15z';
+    var safeName = p.title.replace(/'/g, "&#39;");
     return '<div class="provider-card">' +
       '<div class="provider-header">' +
       '<div class="provider-avatar' + (info.mental ? ' mental' : '') + '">' + (info.mental ? '🧠' : '🏥') + '</div>' +
-      '<div style="flex:1;min-width:0"><div class="provider-name">' + tags.name + '</div>' +
+      '<div style="flex:1;min-width:0"><div class="provider-name">' + p.title + '</div>' +
       '<div class="provider-specialty">' + info.specialty + '</div></div></div>' +
       '<div class="provider-info">' +
       '<div>📍 ' + address + '</div>' +
       (phone ? '<div>📞 ' + phone + '</div>' : '') +
-      (tags.website ? '<div>🌐 <a href="' + tags.website + '" target="_blank" style="color:var(--green-light)">Visit website</a></div>' : '') +
-      (tags.opening_hours ? '<div>🕐 ' + tags.opening_hours + '</div>' : '') +
+      (website ? '<div>🌐 <a href="' + website + '" target="_blank" style="color:var(--green-light)">Visit website</a></div>' : '') +
+      (hours ? '<div>🕐 ' + hours + '</div>' : '') +
+      '<div>⭐ <a href="' + googleMapsUrl + '" target="_blank" style="color:var(--green-light)">View ratings & reviews on Google</a></div>' +
       '</div>' +
       '<div class="provider-actions">' +
-      (phone ? '<button class="btn-directions" onclick="window.location.href=\'tel:' + phone.replace(/\s/g,'') + '\'">📞 Call</button>' : '') +
-      '<button class="btn-maps" onclick="getDirections(' + lat + ',' + lng + ',\'' + tags.name.replace(/'/g,"\\'") + '\')">🗺️ Directions</button>' +
+      (phone ? '<button class="btn-directions" onclick="window.location.href='tel:' + phone + ''">📞 Call</button>' : '') +
+      '<button class="btn-maps" onclick="getDirections(' + lat + ',' + lng + ','' + safeName + '')">🗺️ Directions</button>' +
       '</div></div>';
   }).join('');
   document.getElementById('resultsSection').style.display = 'block';
