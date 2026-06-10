@@ -342,7 +342,7 @@ function doSearch(info, lat, lng) {
   var url = 'https://discover.search.hereapi.com/v1/discover' +
     '?in=circle:' + lat + ',' + lng + ';r=' + radius +
     '&q=' + encodeURIComponent(info.query) +
-    '&limit=20' +
+    '&limit=50' +
     '&apikey=' + HERE_API_KEY;
 
   fetch(url)
