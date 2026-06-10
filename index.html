@@ -343,7 +343,7 @@ function doSearch(info, lat, lng) {
     '?at=' + lat + ',' + lng +
     '&q=' + encodeURIComponent(info.query) +
     '&limit=20' +
-    '&in=circle:' + lat + ',' + lng + ';r=' + radius +
+    '&in=circle%3A' + lat + '%2C' + lng + '%3Br%3D' + radius +
     '&apikey=' + HERE_API_KEY;
 
   fetch(url)
