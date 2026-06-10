@@ -398,27 +398,41 @@ function doSearch(info, lat, lng) {
     })
     .catch(function() { return []; });
 
-  Promise.all([herePromise, overpassPromise]).then(function(results) {
-    document.getElementById('loadingState').classList.remove('show');
-    var hereResults = results[0];
-    var overpassResults = results[1];
+  var seen = {};
+  var merged = [];
 
-    // Merge and deduplicate by name
-    var seen = {};
-    var merged = [];
-    hereResults.forEach(function(r) {
-      var key = r.title.toLowerCase().replace(/\s/g,'');
-      if (!seen[key]) { seen[key] = true; merged.push(r); }
+  function mergeAndRender(newResults) {
+    var added = false;
+    newResults.forEach(function(r) {
+      var key = r.title.toLowerCase().replace(/[^a-z0-9]/g,'');
+      if (!seen[key]) { seen[key] = true; merged.push(r); added = true; }
     });
-    overpassResults.forEach(function(r) {
-      var key = r.title.toLowerCase().replace(/\s/g,'');
-      if (!seen[key]) { seen[key] = true; merged.push(r); }
-    });
-
-    if (merged.length > 0) {
-      allResults = merged;
+    if (added && merged.length > 0) {
+      document.getElementById('loadingState').classList.remove('show');
+      allResults = merged.slice();
       renderResults(merged, info, lat, lng);
-    } else {
+    }
+  }
+
+  // Show HERE Maps results immediately when ready
+  herePromise.then(function(hereResults) {
+    if (hereResults.length > 0) mergeAndRender(hereResults);
+  });
+
+  // Add Overpass results when they arrive
+  overpassPromise.then(function(overpassResults) {
+    if (overpassResults.length > 0) {
+      mergeAndRender(overpassResults);
+    } else if (merged.length === 0) {
+      document.getElementById('loadingState').classList.remove('show');
+      showEmpty('No providers found nearby. Try a different condition or location.');
+    }
+  });
+
+  // Fallback if both fail
+  Promise.all([herePromise, overpassPromise]).then(function() {
+    if (merged.length === 0) {
+      document.getElementById('loadingState').classList.remove('show');
       showEmpty('No providers found nearby. Try a different condition or location.');
     }
   });
