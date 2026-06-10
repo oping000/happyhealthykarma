@@ -340,7 +340,7 @@ function doSearch(info, lat, lng) {
   var HERE_API_KEY = 'dRnx8Wnk1r2SixL-wprqk1BdxYvBFdd0HmgUQXAcP5w';
   var radius = 10000;
   var url = 'https://discover.search.hereapi.com/v1/discover' +
-    '?at=' + lat + ',' + lng +
+    '?in=circle:' + lat + ',' + lng + ';r=' + radius +
     '&q=' + encodeURIComponent(info.query) +
     '&limit=20' +
     '&apikey=' + HERE_API_KEY;
