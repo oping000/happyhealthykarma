@@ -165,6 +165,7 @@ footer a { color: var(--mint); text-decoration: none; }
       <button class="tag" onclick="quickSearch('eye problems')">Eye problems</button>
       <button class="tag" onclick="quickSearch('heart issues')">Heart</button>
       <button class="tag mental" onclick="quickSearch('anxiety')">Anxiety</button>
+      <button class="tag mental" onclick="quickSearch('adhd')">ADHD</button>
       <button class="tag mental" onclick="quickSearch('depression')">Depression</button>
       <button class="tag mental" onclick="quickSearch('stress')">Stress</button>
     </div>
@@ -250,6 +251,7 @@ var conditionMap = {
   'stomach pain':    { specialty: 'Gastroenterologist',        amenity: 'doctors',    query: 'gastroenterologist',     mental: false },
   'child health':    { specialty: 'Pediatrician',              amenity: 'doctors',    query: 'pediatrician',           mental: false },
   'general checkup': { specialty: 'Primary Care Physician',    amenity: 'doctors',    query: 'primary care physician', mental: false },
+  'adhd':            { specialty: 'ADHD Specialist',           amenity: 'therapist',  query: 'psychiatrist ADHD',      mental: true  },
   'anxiety':         { specialty: 'Therapist / Psychiatrist',  amenity: 'therapist',  query: 'psychiatrist',           mental: true  },
   'depression':      { specialty: 'Therapist / Psychiatrist',  amenity: 'therapist',  query: 'psychiatrist',           mental: true  },
   'stress':          { specialty: 'Counselor / Therapist',     amenity: 'therapist',  query: 'therapist',              mental: true  },
@@ -339,33 +341,86 @@ function searchProviders() {
 function doSearch(info, lat, lng) {
   var HERE_API_KEY = 'dRnx8Wnk1r2SixL-wprqk1BdxYvBFdd0HmgUQXAcP5w';
   var radius = 25000;
-  var url = 'https://discover.search.hereapi.com/v1/discover' +
+
+  // HERE Maps search
+  var hereUrl = 'https://discover.search.hereapi.com/v1/discover' +
     '?in=circle:' + lat + ',' + lng + ';r=' + radius +
     '&q=' + encodeURIComponent(info.query) +
-    '&limit=50' +
+    '&limit=20' +
     '&apikey=' + HERE_API_KEY;
 
-  fetch(url)
-  .then(function(r) {
-    if (!r.ok) {
-      return r.text().then(function(t) { throw new Error('HTTP ' + r.status + ': ' + t); });
-    }
-    return r.json();
-  })
-  .then(function(data) {
+  // Overpass search via Cloudflare Worker
+  var overpassQuery = '[out:json][timeout:25];(' +
+    'node["amenity"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
+    'way["amenity"="' + info.amenity + '"](around:' + radius + ',' + lat + ',' + lng + ');' +
+    'node["amenity"="clinic"](around:' + radius + ',' + lat + ',' + lng + ');' +
+    'node["amenity"="hospital"](around:' + radius + ',' + lat + ',' + lng + ');' +
+    ');out body;>;out skel qt;';
+  var overpassUrl = 'https://hhk-overpass-proxy.oping00.workers.dev/?data=' + encodeURIComponent(overpassQuery);
+
+  var herePromise = fetch(hereUrl)
+    .then(function(r) { return r.ok ? r.json() : {items:[]}; })
+    .then(function(data) {
+      return (data.items || []).filter(function(item) { return item.title; }).map(function(item) {
+        return {
+          source: 'here',
+          title: item.title,
+          lat: item.position && item.position.lat,
+          lng: item.position && item.position.lng,
+          address: item.address && item.address.label || '',
+          phone: item.contacts && item.contacts[0] && item.contacts[0].phone && item.contacts[0].phone[0] && item.contacts[0].phone[0].value || '',
+          website: item.contacts && item.contacts[0] && item.contacts[0].www && item.contacts[0].www[0] && item.contacts[0].www[0].value || '',
+          hours: item.openingHours && item.openingHours[0] && item.openingHours[0].text && item.openingHours[0].text[0] || ''
+        };
+      });
+    })
+    .catch(function() { return []; });
+
+  var overpassPromise = fetch(overpassUrl)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      return (data.elements || []).filter(function(el) { return el.tags && el.tags.name; }).map(function(el) {
+        var tags = el.tags || {};
+        var elat = el.lat || (el.center && el.center.lat);
+        var elng = el.lon || (el.center && el.center.lon);
+        var address = tags['addr:street'] ? tags['addr:street'] + (tags['addr:housenumber'] ? ' ' + tags['addr:housenumber'] : '') : (tags['addr:city'] || '');
+        return {
+          source: 'overpass',
+          title: tags.name,
+          lat: elat,
+          lng: elng,
+          address: address,
+          phone: tags.phone || tags['contact:phone'] || '',
+          website: tags.website || '',
+          hours: tags.opening_hours || ''
+        };
+      });
+    })
+    .catch(function() { return []; });
+
+  Promise.all([herePromise, overpassPromise]).then(function(results) {
     document.getElementById('loadingState').classList.remove('show');
-    var results = (data.items || []).filter(function(item) { return item.title; });
-    if (results.length > 0) {
-      allResults = results;
-      renderResults(results, info, lat, lng);
+    var hereResults = results[0];
+    var overpassResults = results[1];
+
+    // Merge and deduplicate by name
+    var seen = {};
+    var merged = [];
+    hereResults.forEach(function(r) {
+      var key = r.title.toLowerCase().replace(/\s/g,'');
+      if (!seen[key]) { seen[key] = true; merged.push(r); }
+    });
+    overpassResults.forEach(function(r) {
+      var key = r.title.toLowerCase().replace(/\s/g,'');
+      if (!seen[key]) { seen[key] = true; merged.push(r); }
+    });
+
+    if (merged.length > 0) {
+      allResults = merged;
+      renderResults(merged, info, lat, lng);
     } else {
       showEmpty('No providers found nearby. Try a different condition or location.');
     }
-  })
-  .catch(function(err) {
-    document.getElementById('loadingState').classList.remove('show');
-    console.error('HERE API error:', err.message);
-    showEmpty('Search error: ' + err.message);
   });
 }
 
@@ -373,35 +428,35 @@ function renderResults(results, info, centerLat, centerLng) {
   document.getElementById('resultsTitle').textContent = info.specialty + ' near you';
   document.getElementById('resultsCount').textContent = results.length + ' providers found';
 
-  var firstLat = centerLat || (results[0].position && results[0].position.lat) || 0;
-  var firstLng = centerLng || (results[0].position && results[0].position.lng) || 0;
+  var firstLat = centerLat || (results[0] && results[0].lat) || 0;
+  var firstLng = centerLng || (results[0] && results[0].lng) || 0;
   initMap(firstLat, firstLng);
 
   if (map) {
     map.eachLayer(function(layer) { if (layer instanceof L.Marker) map.removeLayer(layer); });
     var bounds = [];
     results.forEach(function(place) {
-      var lat = place.position && place.position.lat;
-      var lng = place.position && place.position.lng;
+      var lat = place.lat;
+      var lng = place.lng;
       if (!lat || !lng) return;
       var color = info.mental ? '#6B21A8' : '#2D6A4F';
       var icon = L.divIcon({
         html: '<div style="background:' + color + ';width:14px;height:14px;border-radius:50%;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3)"></div>',
         className: '', iconSize: [14, 14], iconAnchor: [7, 7]
       });
-      L.marker([lat, lng], {icon: icon}).addTo(map).bindPopup('<strong>' + place.title + '</strong><br>' + (place.address && place.address.label || ''));
+      L.marker([lat, lng], {icon: icon}).addTo(map).bindPopup('<strong>' + place.title + '</strong><br>' + (place.address || ''));
       bounds.push([lat, lng]);
     });
     if (bounds.length > 0) setTimeout(function() { map.fitBounds(bounds, {padding: [30, 30]}); }, 300);
   }
 
   document.getElementById('resultsGrid').innerHTML = results.map(function(p) {
-    var lat = p.position && p.position.lat || 0;
-    var lng = p.position && p.position.lng || 0;
-    var address = p.address && p.address.label || 'Address not available';
-    var phone = p.contacts && p.contacts[0] && p.contacts[0].phone && p.contacts[0].phone[0] && p.contacts[0].phone[0].value || '';
-    var website = p.contacts && p.contacts[0] && p.contacts[0].www && p.contacts[0].www[0] && p.contacts[0].www[0].value || '';
-    var hours = p.openingHours && p.openingHours[0] && p.openingHours[0].text && p.openingHours[0].text[0] || '';
+    var lat = p.lat || 0;
+    var lng = p.lng || 0;
+    var address = p.address || 'Address not available';
+    var phone = p.phone || '';
+    var website = p.website || '';
+    var hours = p.hours || '';
     var googleMapsUrl = 'https://www.google.com/maps/search/' + encodeURIComponent(p.title) + '/@' + lat + ',' + lng + ',15z';
     var safeName = p.title.replace(/'/g, "&#39;");
     return '<div class="provider-card">' +
