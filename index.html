@@ -145,6 +145,11 @@ nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
 .cat-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
 .category-card.mental-cat { border-color: #E9D5FF; }
 .category-card.mental-cat:hover { border-color: #7C3AED; background: #F5F3FF; }
+.cat-affiliates { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; justify-content: center; }
+.cat-affiliate-btn { background: #F0FDF4; color: var(--green); border: 1px solid var(--green-light); border-radius: 20px; padding: 0.2rem 0.6rem; font-size: 0.7rem; font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
+.cat-affiliate-btn:hover { background: var(--green); color: white; }
+.mental-cat .cat-affiliate-btn { background: #F5F3FF; color: #6D28D9; border-color: #A78BFA; }
+.mental-cat .cat-affiliate-btn:hover { background: #6D28D9; color: white; }
 footer { background: var(--green); color: rgba(255,255,255,0.8); text-align: center; padding: 2rem; font-size: 0.8rem; margin-top: 3rem; }
 footer a { color: var(--mint); text-decoration: none; }
 @media (max-width: 600px) { .search-row { flex-direction: column; } nav { display: none; } .hero { padding: 2.5rem 1rem 2rem; } }
@@ -246,10 +251,30 @@ footer a { color: var(--mint); text-decoration: none; }
       <div class="category-card" onclick="quickSearch('stomach pain')"><div class="cat-icon">🫁</div><div class="cat-name">Stomach & Gut</div><div class="cat-sub">Gastroenterologist</div></div>
       <div class="category-card" onclick="quickSearch('child health')"><div class="cat-icon">👶</div><div class="cat-name">Child Health</div><div class="cat-sub">Pediatrician</div></div>
       <div class="category-card" onclick="quickSearch('general checkup')"><div class="cat-icon">🩺</div><div class="cat-name">General Checkup</div><div class="cat-sub">Primary Care</div></div>
-      <div class="category-card mental-cat" onclick="quickSearch('anxiety')"><div class="cat-icon">🧠</div><div class="cat-name">Anxiety</div><div class="cat-sub">Therapist / Psychiatrist</div></div>
-      <div class="category-card mental-cat" onclick="quickSearch('depression')"><div class="cat-icon">💙</div><div class="cat-name">Depression</div><div class="cat-sub">Therapist / Psychiatrist</div></div>
-      <div class="category-card mental-cat" onclick="quickSearch('stress')"><div class="cat-icon">🌿</div><div class="cat-name">Stress & Burnout</div><div class="cat-sub">Counselor / Therapist</div></div>
-      <div class="category-card mental-cat" onclick="quickSearch('couples therapy')"><div class="cat-icon">💞</div><div class="cat-name">Couples Therapy</div><div class="cat-sub">Marriage Counselor</div></div>
+      <div class="category-card mental-cat" onclick="quickSearch('anxiety')">
+        <div class="cat-icon">🧠</div><div class="cat-name">Anxiety</div><div class="cat-sub">Therapist / Psychiatrist</div>
+        <div class="cat-affiliates" onclick="event.stopPropagation()">
+          <a href="/api/recommend?slug=anxiety" target="_blank" class="cat-affiliate-btn">💙 Online Therapy</a>
+        </div>
+      </div>
+      <div class="category-card mental-cat" onclick="quickSearch('depression')">
+        <div class="cat-icon">💙</div><div class="cat-name">Depression</div><div class="cat-sub">Therapist / Psychiatrist</div>
+        <div class="cat-affiliates" onclick="event.stopPropagation()">
+          <a href="/api/recommend?slug=depression" target="_blank" class="cat-affiliate-btn">💙 Online Therapy</a>
+        </div>
+      </div>
+      <div class="category-card mental-cat" onclick="quickSearch('stress')">
+        <div class="cat-icon">🌿</div><div class="cat-name">Stress & Burnout</div><div class="cat-sub">Counselor / Therapist</div>
+        <div class="cat-affiliates" onclick="event.stopPropagation()">
+          <a href="/api/recommend?slug=stress" target="_blank" class="cat-affiliate-btn">💙 Online Therapy</a>
+        </div>
+      </div>
+      <div class="category-card mental-cat" onclick="quickSearch('couples therapy')">
+        <div class="cat-icon">💞</div><div class="cat-name">Couples Therapy</div><div class="cat-sub">Marriage Counselor</div>
+        <div class="cat-affiliates" onclick="event.stopPropagation()">
+          <a href="/api/recommend?slug=couples-therapy" target="_blank" class="cat-affiliate-btn">💙 Online Therapy</a>
+        </div>
+      </div>
     </div>
   </div>
 </main>
