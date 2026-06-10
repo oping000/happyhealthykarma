@@ -404,6 +404,7 @@ function doSearch(info, lat, lng) {
   function mergeAndRender(newResults) {
     var added = false;
     newResults.forEach(function(r) {
+      if (merged.length >= 25) return;
       var key = r.title.toLowerCase().replace(/[^a-z0-9]/g,'');
       if (!seen[key]) { seen[key] = true; merged.push(r); added = true; }
     });
