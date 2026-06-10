@@ -208,6 +208,14 @@ footer a { color: var(--mint); text-decoration: none; }
     </a>
   </div>
 
+  <div id="onlineTherapyBanner" style="display:none;background:linear-gradient(135deg,#1a4731,#2D6A4F);border-radius:16px;padding:1.5rem 2rem;margin-bottom:1.5rem;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+    <div>
+      <div style="font-family:'Fraunces',serif;font-size:1.1rem;font-weight:400;color:#fff;margin-bottom:0.3rem;">💙 Prefer online therapy from home?</div>
+      <div style="color:rgba(255,255,255,0.8);font-size:0.85rem;">Licensed therapists available 24/7 — use code <strong style="color:#B7E4C7">THERAPY20</strong> for 20% off your first month</div>
+    </div>
+    <a href="/api/recommend?slug=online-therapy" target="_blank" style="background:#52B788;color:#fff;border-radius:10px;padding:0.75rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;text-decoration:none;white-space:nowrap;">Start Online Therapy →</a>
+  </div>
+
   <div id="resultsSection" style="display:none">
     <div class="results-header">
       <div>
@@ -341,6 +349,7 @@ function searchProviders() {
   document.getElementById('emptyState').classList.remove('show');
   document.getElementById('loadingState').classList.add('show');
   document.getElementById('mentalHealthBanner').style.display = info.mental ? 'flex' : 'none';
+  document.getElementById('onlineTherapyBanner').style.display = info.mental ? 'flex' : 'none';
 
   if (location) {
     fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(location) + '&format=json&limit=1')
