@@ -347,7 +347,12 @@ function doSearch(info, lat, lng) {
     '&apikey=' + HERE_API_KEY;
 
   fetch(url)
-  .then(function(r) { return r.json(); })
+  .then(function(r) {
+    if (!r.ok) {
+      return r.text().then(function(t) { throw new Error('HTTP ' + r.status + ': ' + t); });
+    }
+    return r.json();
+  })
   .then(function(data) {
     document.getElementById('loadingState').classList.remove('show');
     var results = (data.items || []).filter(function(item) { return item.title; });
@@ -358,9 +363,10 @@ function doSearch(info, lat, lng) {
       showEmpty('No providers found nearby. Try a different condition or location.');
     }
   })
-  .catch(function() {
+  .catch(function(err) {
     document.getElementById('loadingState').classList.remove('show');
-    showEmpty('Search error. Please try again in a moment.');
+    console.error('HERE API error:', err.message);
+    showEmpty('Search error: ' + err.message);
   });
 }
 
