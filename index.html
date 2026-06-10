@@ -412,8 +412,8 @@ function renderResults(results, info, centerLat, centerLng) {
       '<div>⭐ <a href="' + googleMapsUrl + '" target="_blank" style="color:var(--green-light)">View ratings & reviews on Google</a></div>' +
       '</div>' +
       '<div class="provider-actions">' +
-      (phone ? '<button class="btn-directions" onclick="window.location.href='tel:' + phone + ''">📞 Call</button>' : '') +
-      '<button class="btn-maps" onclick="getDirections(' + lat + ',' + lng + ','' + safeName + '')">🗺️ Directions</button>' +
+      (phone ? '<button class="btn-directions" onclick="window.location.href=\'tel:' + phone + '\'">📞 Call</button>' : '') +
+      '<button class="btn-maps" onclick="getDirections(' + lat + ',' + lng + ',\'' + safeName + '\')">🗺️ Directions</button>' +
       '</div></div>';
   }).join('');
   document.getElementById('resultsSection').style.display = 'block';
