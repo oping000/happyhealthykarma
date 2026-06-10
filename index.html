@@ -236,26 +236,26 @@ footer a { color: var(--mint); text-decoration: none; }
 var map = null, allResults = [], currentInfo = null;
 
 var conditionMap = {
-  'ear pain':        { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT otolaryngologist',   mental: false },
-  'hearing loss':    { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT otolaryngologist',   mental: false },
-  'throat pain':     { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT',                    mental: false },
-  'back pain':       { specialty: 'Orthopedic Specialist',     amenity: 'doctors',    query: 'orthopedic',             mental: false },
-  'muscle pain':     { specialty: 'Physical Therapist',        amenity: 'doctors',    query: 'physiotherapy',          mental: false },
-  'joint pain':      { specialty: 'Orthopedic Specialist',     amenity: 'doctors',    query: 'orthopedic',             mental: false },
-  'eye problems':    { specialty: 'Ophthalmologist',           amenity: 'doctors',    query: 'ophthalmologist',        mental: false },
-  'vision':          { specialty: 'Optometrist',               amenity: 'optometrist',query: 'optometrist',            mental: false },
-  'heart issues':    { specialty: 'Cardiologist',              amenity: 'doctors',    query: 'cardiologist',           mental: false },
-  'chest pain':      { specialty: 'Cardiologist',              amenity: 'doctors',    query: 'cardiologist',           mental: false },
-  'skin problems':   { specialty: 'Dermatologist',             amenity: 'doctors',    query: 'dermatologist',          mental: false },
-  'stomach pain':    { specialty: 'Gastroenterologist',        amenity: 'doctors',    query: 'gastroenterologist',     mental: false },
-  'child health':    { specialty: 'Pediatrician',              amenity: 'doctors',    query: 'pediatrician',           mental: false },
-  'general checkup': { specialty: 'Primary Care Physician',    amenity: 'doctors',    query: 'general practitioner',   mental: false },
-  'anxiety':         { specialty: 'Therapist / Psychiatrist',  amenity: 'therapist',  query: 'therapist psychiatrist', mental: true  },
-  'depression':      { specialty: 'Therapist / Psychiatrist',  amenity: 'therapist',  query: 'therapist psychiatrist', mental: true  },
-  'stress':          { specialty: 'Counselor / Therapist',     amenity: 'therapist',  query: 'therapist counselor',    mental: true  },
-  'mental health':   { specialty: 'Mental Health Professional',amenity: 'therapist',  query: 'mental health',          mental: true  },
-  'ptsd':            { specialty: 'Therapist / Psychiatrist',  amenity: 'therapist',  query: 'therapist psychiatrist', mental: true  },
-  'couples therapy': { specialty: 'Marriage Counselor',        amenity: 'therapist',  query: 'marriage counselor',     mental: true  }
+  'ear pain':        { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ear nose throat doctor clinic',         mental: false },
+  'hearing loss':    { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ear nose throat doctor clinic',         mental: false },
+  'throat pain':     { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ear nose throat doctor clinic',         mental: false },
+  'back pain':       { specialty: 'Orthopedic Specialist',     amenity: 'doctors',    query: 'orthopedic doctor clinic',              mental: false },
+  'muscle pain':     { specialty: 'Physical Therapist',        amenity: 'doctors',    query: 'physical therapy clinic',               mental: false },
+  'joint pain':      { specialty: 'Orthopedic Specialist',     amenity: 'doctors',    query: 'orthopedic doctor clinic',              mental: false },
+  'eye problems':    { specialty: 'Ophthalmologist',           amenity: 'doctors',    query: 'eye doctor ophthalmologist clinic',     mental: false },
+  'vision':          { specialty: 'Optometrist',               amenity: 'optometrist',query: 'optometrist eye care',                  mental: false },
+  'heart issues':    { specialty: 'Cardiologist',              amenity: 'doctors',    query: 'cardiologist heart doctor clinic',      mental: false },
+  'chest pain':      { specialty: 'Cardiologist',              amenity: 'doctors',    query: 'cardiologist heart doctor clinic',      mental: false },
+  'skin problems':   { specialty: 'Dermatologist',             amenity: 'doctors',    query: 'dermatologist skin doctor clinic',      mental: false },
+  'stomach pain':    { specialty: 'Gastroenterologist',        amenity: 'doctors',    query: 'gastroenterologist stomach doctor',     mental: false },
+  'child health':    { specialty: 'Pediatrician',              amenity: 'doctors',    query: 'pediatrician children doctor clinic',   mental: false },
+  'general checkup': { specialty: 'Primary Care Physician',    amenity: 'doctors',    query: 'primary care doctor clinic',            mental: false },
+  'anxiety':         { specialty: 'Therapist / Psychiatrist',  amenity: 'therapist',  query: 'mental health therapist psychiatrist',  mental: true  },
+  'depression':      { specialty: 'Therapist / Psychiatrist',  amenity: 'therapist',  query: 'mental health therapist psychiatrist',  mental: true  },
+  'stress':          { specialty: 'Counselor / Therapist',     amenity: 'therapist',  query: 'mental health counselor therapist',     mental: true  },
+  'mental health':   { specialty: 'Mental Health Professional',amenity: 'therapist',  query: 'mental health clinic therapist',        mental: true  },
+  'ptsd':            { specialty: 'Therapist / Psychiatrist',  amenity: 'therapist',  query: 'mental health therapist psychiatrist',  mental: true  },
+  'couples therapy': { specialty: 'Marriage Counselor',        amenity: 'therapist',  query: 'marriage counselor couples therapy',    mental: true  }
 };
 
 function getSpecialty(condition) {
