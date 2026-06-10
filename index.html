@@ -426,8 +426,8 @@ function doSearch(info, lat, lng) {
     if (!existing) {
       var el = document.createElement('p');
       el.id = 'loadingMoreIndicator';
-      el.style.cssText = 'text-align:center;color:var(--text-muted);font-size:0.85rem;padding:1rem;grid-column:1/-1';
-      el.innerHTML = '<span style="display:inline-block;width:12px;height:12px;border:2px solid var(--mint);border-top-color:var(--green);border-radius:50%;animation:spin 0.8s linear infinite;margin-right:0.5rem;vertical-align:middle"></span>Loading more providers...';
+      el.style.cssText = 'text-align:center;color:var(--green);font-size:1rem;font-weight:500;padding:1.5rem;grid-column:1/-1';
+      el.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid var(--mint);border-top-color:var(--green);border-radius:50%;animation:spin 0.8s linear infinite;margin-right:0.5rem;vertical-align:middle"></span>Loading more providers...';
       document.getElementById('resultsGrid').appendChild(el);
     }
   }
@@ -464,7 +464,7 @@ function doSearch(info, lat, lng) {
       overpassDone = true;
       hideLoadingMore();
     }
-  }, 3000);
+  }, 8000);
 
   // Add Overpass results when they arrive
   overpassPromise.then(function(overpassResults) {
