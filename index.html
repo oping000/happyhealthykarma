@@ -145,6 +145,8 @@ nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
 .cat-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
 .category-card.mental-cat { border-color: #E9D5FF; }
 .category-card.mental-cat:hover { border-color: #7C3AED; background: #F5F3FF; }
+.category-card.holistic-cat { border-color: #FDE68A; }
+.category-card.holistic-cat:hover { border-color: #D97706; background: #FFFBEB; }
 .cat-affiliates { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; justify-content: center; }
 .cat-affiliate-btn { background: #F0FDF4; color: var(--green); border: 1px solid var(--green-light); border-radius: 20px; padding: 0.2rem 0.6rem; font-size: 0.7rem; font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
 .cat-affiliate-btn:hover { background: var(--green); color: white; }
@@ -242,7 +244,9 @@ footer a { color: var(--mint); text-decoration: none; }
 
   <div id="categoriesSection">
     <div class="section-title">Browse by condition</div>
-    <div class="categories-grid">
+
+    <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:400;color:var(--text-muted);margin-bottom:0.6rem;margin-top:0.5rem;">🏥 Physical Health</div>
+    <div class="categories-grid" style="margin-bottom:1.5rem;">
       <div class="category-card" onclick="quickSearch('ear pain')"><div class="cat-icon">👂</div><div class="cat-name">Ear, Nose & Throat</div><div class="cat-sub">ENT Specialist</div></div>
       <div class="category-card" onclick="quickSearch('back pain')"><div class="cat-icon">🦴</div><div class="cat-name">Muscle & Joint Pain</div><div class="cat-sub">Orthopedic / PT</div></div>
       <div class="category-card" onclick="quickSearch('eye problems')"><div class="cat-icon">👁️</div><div class="cat-name">Eye Problems</div><div class="cat-sub">Ophthalmologist</div></div>
@@ -251,6 +255,10 @@ footer a { color: var(--mint); text-decoration: none; }
       <div class="category-card" onclick="quickSearch('stomach pain')"><div class="cat-icon">🫁</div><div class="cat-name">Stomach & Gut</div><div class="cat-sub">Gastroenterologist</div></div>
       <div class="category-card" onclick="quickSearch('child health')"><div class="cat-icon">👶</div><div class="cat-name">Child Health</div><div class="cat-sub">Pediatrician</div></div>
       <div class="category-card" onclick="quickSearch('general checkup')"><div class="cat-icon">🩺</div><div class="cat-name">General Checkup</div><div class="cat-sub">Primary Care</div></div>
+    </div>
+
+    <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:400;color:var(--text-muted);margin-bottom:0.6rem;">🧠 Mental Health</div>
+    <div class="categories-grid" style="margin-bottom:1.5rem;">
       <div class="category-card mental-cat" onclick="quickSearch('anxiety')">
         <div class="cat-icon">🧠</div><div class="cat-name">Anxiety</div><div class="cat-sub">Therapist / Psychiatrist</div>
         <div class="cat-affiliates" onclick="event.stopPropagation()">
@@ -269,12 +277,32 @@ footer a { color: var(--mint); text-decoration: none; }
           <a href="/api/recommend?slug=stress" target="_blank" class="cat-affiliate-btn">💙 Online Therapy</a>
         </div>
       </div>
+      <div class="category-card mental-cat" onclick="quickSearch('adhd')">
+        <div class="cat-icon">⚡</div><div class="cat-name">ADHD</div><div class="cat-sub">ADHD Specialist</div>
+        <div class="cat-affiliates" onclick="event.stopPropagation()">
+          <a href="/api/recommend?slug=adhd" target="_blank" class="cat-affiliate-btn">💙 Online Therapy</a>
+        </div>
+      </div>
+      <div class="category-card mental-cat" onclick="quickSearch('ptsd')">
+        <div class="cat-icon">🕊️</div><div class="cat-name">PTSD</div><div class="cat-sub">Therapist / Psychiatrist</div>
+        <div class="cat-affiliates" onclick="event.stopPropagation()">
+          <a href="/api/recommend?slug=ptsd" target="_blank" class="cat-affiliate-btn">💙 Online Therapy</a>
+        </div>
+      </div>
       <div class="category-card mental-cat" onclick="quickSearch('couples therapy')">
         <div class="cat-icon">💞</div><div class="cat-name">Couples Therapy</div><div class="cat-sub">Marriage Counselor</div>
         <div class="cat-affiliates" onclick="event.stopPropagation()">
           <a href="/api/recommend?slug=couples-therapy" target="_blank" class="cat-affiliate-btn">💙 Online Therapy</a>
         </div>
       </div>
+    </div>
+
+    <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:400;color:var(--text-muted);margin-bottom:0.6rem;">🌿 Alternative & Holistic Care</div>
+    <div class="categories-grid">
+      <div class="category-card holistic-cat" onclick="quickSearch('acupuncture')"><div class="cat-icon">🪡</div><div class="cat-name">Acupuncture</div><div class="cat-sub">Acupuncturist</div></div>
+      <div class="category-card holistic-cat" onclick="quickSearch('chiropractic')"><div class="cat-icon">🦴</div><div class="cat-name">Chiropractic Care</div><div class="cat-sub">Chiropractor</div></div>
+      <div class="category-card holistic-cat" onclick="quickSearch('massage therapy')"><div class="cat-icon">💆</div><div class="cat-name">Massage Therapy</div><div class="cat-sub">Licensed Massage</div></div>
+      <div class="category-card holistic-cat" onclick="quickSearch('naturopathic')"><div class="cat-icon">🌱</div><div class="cat-name">Naturopathic</div><div class="cat-sub">Naturopathic Doctor</div></div>
     </div>
   </div>
 </main>
@@ -309,7 +337,11 @@ var conditionMap = {
   'stress':          { specialty: 'Counselor / Therapist',     amenity: 'therapist',  query: 'therapist',              mental: true  },
   'mental health':   { specialty: 'Mental Health Professional',amenity: 'therapist',  query: 'mental health',          mental: true  },
   'ptsd':            { specialty: 'Therapist / Psychiatrist',  amenity: 'therapist',  query: 'psychiatrist',           mental: true  },
-  'couples therapy': { specialty: 'Marriage Counselor',        amenity: 'therapist',  query: 'marriage counselor',     mental: true  }
+  'couples therapy': { specialty: 'Marriage Counselor',        amenity: 'therapist',  query: 'marriage counselor',     mental: true  },
+  'acupuncture':     { specialty: 'Acupuncturist',             amenity: 'alternative', query: 'acupuncture',            mental: false },
+  'chiropractic':    { specialty: 'Chiropractor',              amenity: 'alternative', query: 'chiropractor',           mental: false },
+  'massage therapy': { specialty: 'Licensed Massage Therapist',amenity: 'alternative', query: 'massage',                mental: false },
+  'naturopathic':    { specialty: 'Naturopathic Doctor',       amenity: 'alternative', query: 'naturopath',             mental: false }
 };
 
 function getSpecialty(condition) {
