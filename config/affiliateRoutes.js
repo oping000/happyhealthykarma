@@ -71,8 +71,8 @@ const AFFILIATE_ROUTES = {
 
   "talkspace": {
     name: "Talkspace",
-    targetUrl: "https://happyhealthykarma.com",  // Replace with Talkspace link when approved
-    type: "pending",
+    targetUrl: "https://talkspace.pxf.io/3kyymn",
+    type: "active",
     payout: "$15-500 per sale"
   },
 
