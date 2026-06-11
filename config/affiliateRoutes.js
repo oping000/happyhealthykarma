@@ -7,56 +7,56 @@ const AFFILIATE_ROUTES = {
   // ── MENTAL HEALTH ──────────────────────────────────────────────
   "online-therapy": {
     name: "Online-Therapy.com",
-    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6167",
+    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174",
     type: "active",
     payout: "$150 per new client"
   },
 
   "anxiety": {
     name: "Anxiety - Online Therapy",
-    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6167",
+    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174",
     type: "active",
     payout: "$150 per new client"
   },
 
   "depression": {
     name: "Depression - Online Therapy",
-    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6167",
+    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174",
     type: "active",
     payout: "$150 per new client"
   },
 
   "stress": {
     name: "Stress - Online Therapy",
-    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6167",
+    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174",
     type: "active",
     payout: "$150 per new client"
   },
 
   "ptsd": {
     name: "PTSD - Online Therapy",
-    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6167",
+    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174",
     type: "active",
     payout: "$150 per new client"
   },
 
   "adhd": {
     name: "ADHD - Online Therapy",
-    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6167",
+    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174",
     type: "active",
     payout: "$150 per new client"
   },
 
   "couples-therapy": {
     name: "Couples Therapy - Online Therapy",
-    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6167",
+    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174",
     type: "active",
     payout: "$150 per new client"
   },
 
   "mental-health": {
     name: "Mental Health - Online Therapy",
-    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6167",
+    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174",
     type: "active",
     payout: "$150 per new client"
   },
@@ -79,7 +79,7 @@ const AFFILIATE_ROUTES = {
   // ── GENERAL TELEHEALTH ─────────────────────────────────────────
   "telehealth": {
     name: "Online Therapy",
-    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6167",
+    targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174",
     type: "active",
     payout: "$150 per new client"
   }
