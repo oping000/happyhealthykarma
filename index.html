@@ -125,7 +125,7 @@ nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
 .btn-directions:hover { background: #1B4332; }
 .btn-maps { flex: 1; background: none; color: var(--green); border: 1.5px solid var(--mint); border-radius: 8px; padding: 0.55rem; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
 .btn-maps:hover { background: var(--green-pale); border-color: var(--green-light); }
-.mental-health-banner { background: linear-gradient(135deg, #4C1D95, #6D28D9); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.mental-health-banner { background: linear-gradient(135deg, #4C1D95, #6D28D9); border-radius: 16px; padding: 1.25rem 1.75rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
 .mental-health-banner h3 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 400; color: var(--white); margin-bottom: 0.3rem; }
 .mental-health-banner p { color: rgba(255,255,255,0.75); font-size: 0.85rem; }
 .crisis-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 1rem 1.25rem; text-align: center; color: var(--white); cursor: pointer; text-decoration: none; display: block; }
@@ -162,8 +162,10 @@ footer a { color: var(--mint); text-decoration: none; }
 <body>
 <header>
   <div>
-    <div class="logo">Happy <span>Healthy</span> Karma</div>
-    <div class="tagline-small">Find care near you</div>
+    <a href="/" style="text-decoration:none;">
+      <div class="logo">Happy <span>Healthy</span> Karma</div>
+      <div class="tagline-small">Find care near you</div>
+    </a>
   </div>
   <nav><a href="#" class="active">Search</a><a href="#mental">Mental Health</a><a href="#about">About</a></nav>
 </header>
