@@ -99,6 +99,8 @@ nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
 .condition-tags span { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; padding-right: 0.25rem; }
 .tag { background: var(--green-pale); color: var(--green); border: none; border-radius: 20px; padding: 0.3rem 0.75rem; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
 .tag:hover { background: var(--green); color: var(--white); }
+.tag.telehealth { background: #1D9E75; color: var(--white); border: none; border-radius: 20px; padding: 0.3rem 0.75rem; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
+.tag.telehealth:hover { background: #157A5A; }
 .tag.mental { background: #E8D5F5; color: #6B21A8; }
 .tag.mental:hover { background: #6B21A8; color: var(--white); }
 .main { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
@@ -196,6 +198,7 @@ footer a { color: var(--mint); text-decoration: none; }
       <button class="tag mental" onclick="quickSearch('adhd')">ADHD</button>
       <button class="tag mental" onclick="quickSearch('depression')">Depression</button>
       <button class="tag mental" onclick="quickSearch('stress')">Stress</button>
+      <button class="tag telehealth" onclick="showTelehealth()">💻 See a doctor online</button>
     </div>
   </div>
 </section>
@@ -223,6 +226,27 @@ footer a { color: var(--mint); text-decoration: none; }
       <div style="color:rgba(255,255,255,0.8);font-size:0.85rem;">Licensed therapists available 24/7 — use code <strong style="color:#B7E4C7">THERAPY20</strong> for 20% off your first month</div>
     </div>
     <a href="/api/recommend?slug=online-therapy" target="_blank" style="background:#52B788;color:#fff;border-radius:10px;padding:0.75rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;text-decoration:none;white-space:nowrap;">Start Online Therapy →</a>
+  </div>
+
+  <div id="cashPayBanner" style="display:none;background:#EAF7EF;border:1.5px solid #52B788;border-radius:16px;padding:1.25rem 1.75rem;margin-bottom:1.5rem;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+    <div>
+      <div style="font-family:'Fraunces',serif;font-size:1.1rem;font-weight:400;color:#1A2E1E;margin-bottom:0.3rem;">💻 No insurance? No problem.</div>
+      <div style="color:#5C7A62;font-size:0.85rem;">See a doctor online from <strong style="color:#2D6A4F">$37</strong> — no insurance needed, no appointment required. Cash pay telehealth available 24/7.</div>
+    </div>
+    <a href="/api/recommend?slug=sesame-care" target="_blank" style="background:#2D6A4F;color:#fff;border-radius:10px;padding:0.75rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;text-decoration:none;white-space:nowrap;">Find Online Care →</a>
+  </div>
+
+  <div id="telehealthModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:20px;padding:2rem;max-width:480px;width:90%;margin:0 auto;position:relative;">
+      <button onclick="document.getElementById('telehealthModal').style.display='none'" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#5C7A62;">×</button>
+      <div style="font-family:'Fraunces',serif;font-size:1.4rem;font-weight:400;color:#1A2E1E;margin-bottom:0.5rem;">💻 See a Doctor Online</div>
+      <div style="font-size:0.9rem;color:#5C7A62;margin-bottom:1.5rem;">No insurance needed — cash pay visits from $37. Licensed doctors available 24/7.</div>
+      <div style="display:flex;flex-direction:column;gap:0.75rem;">
+        <a href="/api/recommend?slug=sesame-care" target="_blank" style="background:#2D6A4F;color:#fff;border-radius:10px;padding:0.9rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;text-decoration:none;text-align:center;">🩺 Sesame Care — from $37 per visit</a>
+        <a href="/api/recommend?slug=online-therapy" target="_blank" style="background:#4C1D95;color:#fff;border-radius:10px;padding:0.9rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;text-decoration:none;text-align:center;">🧠 Online Therapy — mental health from home</a>
+        <a href="/api/recommend?slug=talkspace" target="_blank" style="background:#1D4ED8;color:#fff;border-radius:10px;padding:0.9rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;text-decoration:none;text-align:center;">💬 Talkspace — therapy & psychiatry online</a>
+      </div>
+    </div>
   </div>
 
   <div id="resultsSection" style="display:none">
@@ -399,6 +423,10 @@ function detectLocation() {
   }, { timeout: 10000 });
 }
 
+function showTelehealth() {
+  document.getElementById('telehealthModal').style.display = 'flex';
+}
+
 function quickSearch(condition) {
   document.getElementById('conditionInput').value = condition;
   searchProviders();
@@ -415,6 +443,8 @@ function searchProviders() {
   document.getElementById('loadingState').classList.add('show');
   document.getElementById('mentalHealthBanner').style.display = info.mental ? 'flex' : 'none';
   document.getElementById('onlineTherapyBanner').style.display = info.mental ? 'flex' : 'none';
+  var isGeneral = condition.toLowerCase().indexOf('general checkup') !== -1 || condition.toLowerCase().indexOf('primary care') !== -1;
+  document.getElementById('cashPayBanner').style.display = (info.mental || isGeneral) ? 'flex' : 'none';
 
   if (location) {
     fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(location) + '&format=json&limit=1&countrycodes=us')
