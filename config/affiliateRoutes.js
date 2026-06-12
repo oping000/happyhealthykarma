@@ -82,6 +82,13 @@ const AFFILIATE_ROUTES = {
     targetUrl: "https://go.online-therapy.com/aff_c?offer_id=2&aff_id=6174",
     type: "active",
     payout: "$150 per new client"
+  },
+
+  "sesame-care": {
+    name: "Sesame Care",
+    targetUrl: "https://happyhealthykarma.com",  // Replace with Sesame Care link when approved
+    type: "pending",
+    payout: "$10-20 per booking"
   }
 
 };
