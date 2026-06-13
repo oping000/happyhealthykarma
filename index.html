@@ -200,7 +200,7 @@ footer a { color: var(--mint); text-decoration: none; }
       <button class="tag mental" onclick="quickSearch('adhd')">ADHD</button>
       <button class="tag mental" onclick="quickSearch('depression')">Depression</button>
       <button class="tag mental" onclick="quickSearch('stress')">Stress</button>
-      <button class="tag telehealth" onclick="showTelehealth()">💻 See a doctor online</button>
+      <button class="tag telehealth" onclick="showTelehealth()">💻 Telehealth</button>
     </div>
   </div>
 </section>
@@ -265,6 +265,19 @@ footer a { color: var(--mint); text-decoration: none; }
     </div>
     <div id="map"></div>
     <div class="results-grid" id="resultsGrid"></div>
+    <div id="amazonProducts" style="display:none;margin-top:1.5rem;">
+      <div style="background:#F9F3E8;border:1px solid #B7E4C7;border-radius:12px;overflow:hidden;">
+        <button onclick="toggleAmazon()" style="width:100%;display:flex;align-items:center;gap:8px;padding:0.75rem 1.25rem;background:none;border:none;cursor:pointer;text-align:left;">
+          <span style="font-size:1rem;">🛒</span>
+          <span style="font-size:0.85rem;color:#5C7A62;font-family:'DM Sans',sans-serif;flex:1;font-weight:500;">Shop related wellness products on Amazon</span>
+          <span id="amazonArrow" style="font-size:1rem;color:#5C7A62;transition:transform 0.2s;">▼</span>
+        </button>
+        <div id="amazonContent" style="display:none;padding:0 1.25rem 1.25rem;">
+          <div id="amazonGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.75rem;"></div>
+          <div style="font-size:0.7rem;color:#5C7A62;margin-top:0.75rem;">As an Amazon Associate, Happy Healthy Karma earns from qualifying purchases.</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="loading" id="loadingState"><div class="spinner"></div><p>Finding providers near you...</p></div>
@@ -348,6 +361,60 @@ footer a { color: var(--mint); text-decoration: none; }
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+var amazonProducts = {
+  'back pain':       [{name:'Heating Pad',url:'heating+pad+back+pain'},{name:'Massage Gun',url:'massage+gun'},{name:'Back Brace',url:'back+brace+support'},{name:'Tiger Balm',url:'tiger+balm+pain+relief'}],
+  'muscle pain':     [{name:'Heating Pad',url:'heating+pad'},{name:'Massage Gun',url:'massage+gun'},{name:'Tiger Balm',url:'tiger+balm'},{name:'Foam Roller',url:'foam+roller+muscle'}],
+  'joint pain':      [{name:'Back Brace',url:'back+brace'},{name:'Knee Brace',url:'knee+brace+support'},{name:'Tiger Balm',url:'tiger+balm'},{name:'Joint Supplements',url:'joint+supplements+glucosamine'}],
+  'chiropractic':    [{name:'Back Brace',url:'back+brace'},{name:'Posture Corrector',url:'posture+corrector'},{name:'Tiger Balm',url:'tiger+balm'},{name:'Joint Supplements',url:'joint+supplements'}],
+  'acupuncture':     [{name:'Acupuncture Mat',url:'acupuncture+mat'},{name:'Tiger Balm',url:'tiger+balm'},{name:'Essential Oils',url:'essential+oils+wellness'},{name:'Herbal Tea',url:'herbal+tea+wellness'}],
+  'massage therapy': [{name:'Massage Gun',url:'massage+gun'},{name:'Foam Roller',url:'foam+roller'},{name:'Essential Oils',url:'essential+oils+massage'},{name:'Massage Oil',url:'massage+oil'}],
+  'naturopathic':    [{name:'Herbal Supplements',url:'herbal+supplements'},{name:'Essential Oils',url:'essential+oils'},{name:'Probiotics',url:'probiotics+supplements'},{name:'Herbal Tea',url:'herbal+tea'}],
+  'anxiety':         [{name:'Weighted Blanket',url:'weighted+blanket+anxiety'},{name:'Meditation Cushion',url:'meditation+cushion'},{name:'Essential Oils',url:'essential+oils+calm'},{name:'Ashwagandha',url:'ashwagandha+supplements'}],
+  'stress':          [{name:'Weighted Blanket',url:'weighted+blanket'},{name:'Essential Oils',url:'essential+oils+stress+relief'},{name:'Herbal Tea',url:'herbal+calming+tea'},{name:'Meditation Cushion',url:'meditation+cushion'}],
+  'depression':      [{name:'Light Therapy Lamp',url:'light+therapy+lamp+depression'},{name:'Weighted Blanket',url:'weighted+blanket'},{name:'Journal',url:'mental+health+journal'},{name:'Vitamin D',url:'vitamin+d+supplements'}],
+  'adhd':            [{name:'Fidget Tools',url:'fidget+tools+focus'},{name:'Noise Canceling Headphones',url:'noise+canceling+headphones'},{name:'Focus Supplements',url:'focus+supplements'},{name:'Journal',url:'adhd+planner+journal'}],
+  'ptsd':            [{name:'Weighted Blanket',url:'weighted+blanket'},{name:'Meditation Cushion',url:'meditation+cushion'},{name:'Essential Oils',url:'essential+oils+calming'},{name:'Journal',url:'therapy+journal'}],
+  'couples therapy': [{name:'Relationship Journal',url:'couples+journal'},{name:'Meditation Guide',url:'meditation+guide+book'},{name:'Herbal Tea',url:'herbal+calming+tea'},{name:'Essential Oils',url:'essential+oils'}],
+  'substance use':   [{name:'Recovery Journal',url:'addiction+recovery+journal'},{name:'Meditation Cushion',url:'meditation+cushion'},{name:'Herbal Supplements',url:'herbal+supplements+calm'},{name:'Mindfulness Book',url:'mindfulness+recovery+book'}],
+  'eye problems':    [{name:'Eye Mask',url:'eye+mask+warm+compress'},{name:'Blue Light Glasses',url:'blue+light+glasses'},{name:'Eye Drops',url:'lubricating+eye+drops'},{name:'Warm Compress',url:'eye+warm+compress'}],
+  'heart issues':    [{name:'Blood Pressure Monitor',url:'blood+pressure+monitor'},{name:'Omega 3',url:'omega+3+fish+oil+heart'},{name:'Heart Health Supplements',url:'heart+health+supplements'},{name:'Pulse Oximeter',url:'pulse+oximeter'}],
+  'stomach pain':    [{name:'Probiotics',url:'probiotics+digestive'},{name:'Digestive Enzymes',url:'digestive+enzymes'},{name:'Peppermint Tea',url:'peppermint+tea+digestive'},{name:'Ginger Supplements',url:'ginger+supplements+stomach'}],
+  'general checkup': [{name:'Blood Pressure Monitor',url:'blood+pressure+monitor'},{name:'Thermometer',url:'digital+thermometer'},{name:'Pulse Oximeter',url:'pulse+oximeter'},{name:'First Aid Kit',url:'first+aid+kit'}]
+};
+
+function toggleAmazon() {
+  var content = document.getElementById('amazonContent');
+  var arrow = document.getElementById('amazonArrow');
+  if (content.style.display === 'none') {
+    content.style.display = 'block';
+    arrow.style.transform = 'rotate(180deg)';
+  } else {
+    content.style.display = 'none';
+    arrow.style.transform = 'rotate(0deg)';
+  }
+}
+
+function showAmazonProducts(condition) {
+  var lower = condition.toLowerCase();
+  var products = null;
+  for (var key in amazonProducts) {
+    if (lower.indexOf(key) !== -1) { products = amazonProducts[key]; break; }
+  }
+  var amazonEl = document.getElementById('amazonProducts');
+  if (!products) { amazonEl.style.display = 'none'; return; }
+  var grid = document.getElementById('amazonGrid');
+  grid.innerHTML = products.map(function(p) {
+    var url = 'https://www.amazon.com/s?k=' + p.url + '&tag=google0760-20';
+    return '<a href="' + url + '" target="_blank" style="background:#fff;border:1px solid #D8F3DC;border-radius:10px;padding:0.6rem 0.75rem;text-decoration:none;display:block;">' +
+      '<div style="font-size:0.82rem;font-weight:500;color:#1A2E1E;">' + p.name + '</div>' +
+      '<div style="font-size:0.72rem;color:#52B788;margin-top:3px;">Shop on Amazon →</div>' +
+      '</a>';
+  }).join('');
+  document.getElementById('amazonContent').style.display = 'none';
+  document.getElementById('amazonArrow').style.transform = 'rotate(0deg)';
+  amazonEl.style.display = 'block';
+}
+
 var map = null, allResults = [], currentInfo = null;
 
 var conditionMap = {
@@ -440,7 +507,7 @@ function searchProviders() {
   var condition = document.getElementById('conditionInput').value.trim();
   var location  = document.getElementById('locationInput').value.trim();
   if (!condition) { document.getElementById('conditionInput').focus(); return; }
-  var info = getSpecialty(condition); currentInfo = info;
+  var info = getSpecialty(condition); currentInfo = info; info.query = condition;
   document.getElementById('categoriesSection').style.display = 'none';
   document.getElementById('resultsSection').style.display = 'none';
   document.getElementById('emptyState').classList.remove('show');
@@ -653,6 +720,7 @@ function renderResults(results, info, centerLat, centerLng) {
       '</div></div>';
   }).join('');
   document.getElementById('resultsSection').style.display = 'block';
+  showAmazonProducts(info.query || '');
 }
 
 function getDirections(lat, lng, name) {
