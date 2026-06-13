@@ -423,13 +423,13 @@ function showAmazonProducts(condition) {
 var map = null, allResults = [], currentInfo = null;
 
 var conditionMap = {
-  'ear pain':        { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ear nose throat ENT clinic',  mental: false },
-  'hearing loss':    { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ear nose throat ENT hearing', mental: false },
-  'throat pain':     { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ear nose throat ENT clinic',  mental: false },
-  'sinus':           { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT sinus allergy clinic',    mental: false },
-  'sinusitis':       { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT sinus allergy clinic',    mental: false },
-  'nasal':           { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT sinus nasal clinic',      mental: false },
-  'allergies':       { specialty: 'ENT / Allergist',           amenity: 'doctors',    query: 'allergy ENT clinic',          mental: false },
+  'ear pain':        { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT ear nose throat',         mental: false },
+  'hearing loss':    { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT ear nose throat hearing',  mental: false },
+  'throat pain':     { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT ear nose throat',         mental: false },
+  'sinus':           { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT ear nose throat sinus',   mental: false },
+  'sinusitis':       { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT ear nose throat sinus',   mental: false },
+  'nasal':           { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT ear nose throat nasal',   mental: false },
+  'allergies':       { specialty: 'ENT / Allergist',           amenity: 'doctors',    query: 'ENT allergy ear nose throat', mental: false },
   'back pain':       { specialty: 'Orthopedic Specialist',     amenity: 'doctors',    query: 'orthopedic',             mental: false },
   'muscle pain':     { specialty: 'Physical Therapist',        amenity: 'doctors',    query: 'physical therapy',       mental: false },
   'joint pain':      { specialty: 'Orthopedic Specialist',     amenity: 'doctors',    query: 'orthopedic',             mental: false },
