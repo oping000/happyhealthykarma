@@ -156,7 +156,7 @@ nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
 .mental-cat .cat-affiliate-btn:hover { background: #6D28D9; color: white; }
 footer { background: var(--green); color: rgba(255,255,255,0.8); text-align: center; padding: 2rem; font-size: 0.8rem; margin-top: 3rem; }
 footer a { color: var(--mint); text-decoration: none; }
-@media (max-width: 600px) { .search-row { flex-direction: column; } nav { display: none; } .hero { padding: 2.5rem 1rem 2rem; } }
+@media (max-width: 600px) { .search-row { flex-direction: column; } nav { display: none; } .hero { padding: 2.5rem 1rem 2rem; } #amazonGrid { grid-template-columns: repeat(2, 1fr) !important; } }
 </style>
 </head>
 <body>
@@ -269,11 +269,11 @@ footer a { color: var(--mint); text-decoration: none; }
       <div style="background:#F9F3E8;border:1px solid #B7E4C7;border-radius:12px;overflow:hidden;">
         <button onclick="toggleAmazon()" style="width:100%;display:flex;align-items:center;gap:8px;padding:0.75rem 1.25rem;background:none;border:none;cursor:pointer;text-align:left;">
           <span style="font-size:1rem;">🛒</span>
-          <span style="font-size:0.85rem;color:#5C7A62;font-family:'DM Sans',sans-serif;flex:1;font-weight:500;">Shop related wellness products on Amazon</span>
+          <span style="font-size:0.95rem;color:#5C7A62;font-family:'DM Sans',sans-serif;flex:1;font-weight:600;">Shop related wellness products on Amazon</span>
           <span id="amazonArrow" style="font-size:1rem;color:#5C7A62;transition:transform 0.2s;">▼</span>
         </button>
         <div id="amazonContent" style="display:none;padding:0 1.25rem 1.25rem;">
-          <div id="amazonGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.75rem;"></div>
+          <div id="amazonGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.6rem;"></div>
           <div style="font-size:0.7rem;color:#5C7A62;margin-top:0.75rem;">As an Amazon Associate, Happy Healthy Karma earns from qualifying purchases.</div>
         </div>
       </div>
