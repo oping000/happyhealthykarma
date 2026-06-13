@@ -519,7 +519,7 @@ function searchProviders() {
   document.getElementById('cashPayBanner').style.display = (info.mental || isGeneral) ? 'flex' : 'none';
 
   if (location) {
-    fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(location) + '&format=json&limit=1&countrycodes=us')
+    fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(location) + '&format=json&limit=1&countrycodes=us,ca')
       .then(function(r) { return r.json(); })
       .then(function(data) {
         if (data && data[0]) doSearch(info, parseFloat(data[0].lat), parseFloat(data[0].lon));
