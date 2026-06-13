@@ -640,7 +640,7 @@ function doSearch(info, lat, lng) {
       overpassDone = true;
       hideLoadingMore();
     }
-  }, 8000);
+  }, 3500);
 
   // Add Overpass results when they arrive
   overpassPromise.then(function(overpassResults) {
@@ -701,8 +701,8 @@ function renderResults(results, info, centerLat, centerLng) {
     var phone = p.phone || '';
     var website = p.website || '';
     var hours = p.hours || '';
-    var googleMapsUrl = 'https://www.google.com/maps/search/' + encodeURIComponent(p.title) + '/@' + lat + ',' + lng + ',15z';
-    var safeName = p.title.replace(/'/g, "&#39;");
+    var googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.title + ' ' + address);
+    var safeName = p.title.replace(/'/g, "\\'");
     return '<div class="provider-card">' +
       '<div class="provider-header">' +
       '<div class="provider-avatar' + (info.mental ? ' mental' : '') + '">' + (info.mental ? '🧠' : '🏥') + '</div>' +
