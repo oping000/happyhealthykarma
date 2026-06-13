@@ -317,6 +317,7 @@ footer a { color: var(--mint); text-decoration: none; }
       <div class="category-card" onclick="quickSearch('stomach pain')"><div class="cat-icon">🫁</div><div class="cat-name">Stomach & Gut</div><div class="cat-sub">Gastroenterologist</div></div>
       <div class="category-card" onclick="quickSearch('child health')"><div class="cat-icon">👶</div><div class="cat-name">Child Health</div><div class="cat-sub">Pediatrician</div></div>
       <div class="category-card" onclick="quickSearch('general checkup')"><div class="cat-icon">🩺</div><div class="cat-name">General Checkup</div><div class="cat-sub">Primary Care</div></div>
+      <div class="category-card" onclick="window.location.href='/dentistry.html'"><div class="cat-icon">🦷</div><div class="cat-name">Dental Care</div><div class="cat-sub">Dentist / Orthodontist</div></div>
     </div>
 
     <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:400;color:var(--text-muted);margin-bottom:0.6rem;">🧠 Mental Health</div>
@@ -537,6 +538,18 @@ function searchProviders() {
   var condition = document.getElementById('conditionInput').value.trim();
   var location  = document.getElementById('locationInput').value.trim();
   if (!condition) { document.getElementById('conditionInput').focus(); return; }
+
+  // Redirect dental searches to dedicated dentistry page
+  var dentalKeywords = ['dentist', 'dental', 'tooth', 'teeth', 'braces', 'orthodont', 'oral surgeon', 'wisdom teeth', 'root canal', 'gum disease', 'dentures', 'implant', 'cavity', 'crown', 'filling', 'periodont', 'endodont'];
+  var lowerCondition = condition.toLowerCase();
+  for (var i = 0; i < dentalKeywords.length; i++) {
+    if (lowerCondition.indexOf(dentalKeywords[i]) !== -1) {
+      var redirectUrl = '/dentistry.html?condition=' + encodeURIComponent(condition);
+      if (location) redirectUrl += '&location=' + encodeURIComponent(location);
+      window.location.href = redirectUrl;
+      return;
+    }
+  }
   var info = getSpecialty(condition); currentInfo = info; info.query = condition;
   document.getElementById('categoriesSection').style.display = 'none';
   document.getElementById('resultsSection').style.display = 'none';

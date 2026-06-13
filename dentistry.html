@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Primary SEO -->
+<title>Find a Dentist Near You | Happy Healthy Karma - Free Dental Provider Search</title>
+<meta name="description" content="Find dentists, orthodontists, oral surgeons and dental specialists near you — free, no signup required. Search by dental concern and find the right dental care provider in your area.">
+<meta name="keywords" content="dentist near me, find a dentist, dental care near me, orthodontist near me, oral surgeon near me, dental specialist near me, teeth cleaning near me, emergency dentist near me, pediatric dentist near me, cosmetic dentist near me, dental implants near me, tooth pain dentist, free dentist search">
+<meta name="author" content="Happy Healthy Karma">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://happyhealthykarma.com/dentistry.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://happyhealthykarma.com/dentistry.html">
+<meta property="og:title" content="Find a Dentist Near You | Happy Healthy Karma">
+<meta property="og:description" content="Search for dentists and dental specialists near you by concern. Free, fast and easy — no signup required.">
+<meta property="og:site_name" content="Happy Healthy Karma">
+
+<!-- Schema markup -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "Find a Dentist Near You",
+  "description": "Free dental provider search — find dentists, orthodontists and oral surgeons near you by concern.",
+  "url": "https://happyhealthykarma.com/dentistry.html",
+  "medicalSpecialty": ["Dentistry", "Orthodontics", "Oral Surgery", "Pediatric Dentistry", "Cosmetic Dentistry"],
+  "isPartOf": {
+    "@type": "MedicalBusiness",
+    "name": "Happy Healthy Karma",
+    "url": "https://happyhealthykarma.com"
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+:root {
+  --green: #2D6A4F; --green-light: #52B788; --green-pale: #D8F3DC;
+  --mint: #B7E4C7; --warm: #F9F3E8; --text: #1A2E1E;
+  --text-muted: #5C7A62; --white: #FFFFFF; --shadow: 0 4px 24px rgba(45,106,79,0.10);
+  --blue: #1E40AF; --blue-light: #3B82F6; --blue-pale: #DBEAFE;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--warm); color: var(--text); min-height: 100vh; }
+header { background: var(--white); border-bottom: 1px solid var(--mint); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+.logo { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 600; color: var(--green); text-decoration: none; }
+.logo span { color: var(--green-light); }
+.tagline-small { font-size: 0.75rem; color: var(--text-muted); font-weight: 300; }
+nav a { text-decoration: none; color: var(--text-muted); font-size: 0.875rem; margin-left: 1.5rem; transition: color 0.2s; }
+nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
+.hero { background: linear-gradient(135deg, #1E3A5F 0%, #1E40AF 100%); padding: 3rem 2rem 2.5rem; text-align: center; }
+.hero h1 { font-family: 'Fraunces', serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 300; color: var(--white); line-height: 1.2; margin-bottom: 0.75rem; }
+.hero h1 em { font-style: italic; color: #BFDBFE; }
+.hero p { color: rgba(255,255,255,0.75); font-size: 1rem; font-weight: 300; margin-bottom: 2rem; }
+.search-box { background: var(--white); border-radius: 20px; padding: 1.5rem; max-width: 680px; margin: 0 auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+.search-row { display: flex; gap: 0.75rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+.input-group { flex: 1; min-width: 200px; position: relative; }
+.input-group label { display: block; font-size: 0.7rem; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+.input-group input { width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border: 1.5px solid var(--mint); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: var(--text); background: var(--warm); outline: none; transition: border-color 0.2s; }
+.input-group input:focus { border-color: var(--blue-light); background: var(--white); }
+.input-group .icon { position: absolute; left: 0.75rem; bottom: 0.8rem; font-size: 1rem; }
+.btn-search { background: var(--blue); color: var(--white); border: none; border-radius: 10px; padding: 0.75rem 1.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.2s; white-space: nowrap; align-self: flex-end; }
+.btn-search:hover { background: #1E3A8A; }
+.btn-location { background: none; border: 1.5px solid var(--mint); border-radius: 10px; padding: 0.75rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; color: var(--text-muted); cursor: pointer; transition: all 0.2s; align-self: flex-end; white-space: nowrap; }
+.btn-location:hover { border-color: var(--blue-light); color: var(--blue); background: var(--blue-pale); }
+.condition-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; padding-top: 0.5rem; border-top: 1px solid var(--green-pale); align-items: center; }
+.condition-tags span { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; padding-right: 0.25rem; }
+.tag { background: var(--blue-pale); color: var(--blue); border: none; border-radius: 20px; padding: 0.3rem 0.75rem; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
+.tag:hover { background: var(--blue); color: var(--white); }
+.main { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+.section-title { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 400; color: var(--text); margin-bottom: 1rem; }
+.disclaimer { background: var(--white); border: 1px solid var(--mint); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 2rem; font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 0.75rem; }
+#map { width: 100%; height: 380px; border-radius: 16px; margin-bottom: 1.5rem; border: 1px solid var(--blue-pale); display: none; z-index: 1; position: relative; }
+.results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.provider-card { background: var(--white); border-radius: 16px; padding: 1.25rem; border: 1px solid var(--blue-pale); box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s; }
+.provider-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(30,64,175,0.15); }
+.provider-header { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.75rem; }
+.provider-avatar { width: 44px; height: 44px; border-radius: 12px; background: var(--blue-pale); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+.provider-name { font-weight: 500; font-size: 0.95rem; color: var(--text); margin-bottom: 0.15rem; }
+.provider-specialty { font-size: 0.78rem; color: var(--blue-light); font-weight: 500; }
+.provider-info { font-size: 0.82rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 0.75rem; }
+.provider-actions { display: flex; gap: 0.5rem; }
+.btn-call { flex: 1; background: var(--blue); color: var(--white); border: none; border-radius: 8px; padding: 0.55rem; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+.btn-call:hover { background: #1E3A8A; }
+.btn-maps { flex: 1; background: none; color: var(--blue); border: 1.5px solid var(--blue-pale); border-radius: 8px; padding: 0.55rem; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+.btn-maps:hover { background: var(--blue-pale); }
+.loading { text-align: center; padding: 3rem; color: var(--text-muted); display: none; }
+.loading.show { display: block; }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--blue-pale); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { text-align: center; padding: 3rem; color: var(--text-muted); display: none; }
+.empty-state.show { display: block; }
+.results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+.results-count { font-size: 0.875rem; color: var(--text-muted); }
+.categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.75rem; margin-bottom: 2rem; }
+.category-card { background: var(--white); border: 1.5px solid var(--blue-pale); border-radius: 14px; padding: 1rem; text-align: center; cursor: pointer; transition: all 0.2s; }
+.category-card:hover { border-color: var(--blue-light); background: var(--blue-pale); transform: translateY(-2px); }
+.cat-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+.cat-name { font-size: 0.8rem; font-weight: 500; color: var(--text); }
+.cat-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
+.info-section { background: var(--white); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; border: 1px solid var(--blue-pale); }
+.info-section h2 { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 400; color: var(--text); margin-bottom: 1rem; }
+.info-section p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 0.75rem; }
+.tips-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.tip-card { background: var(--blue-pale); border-radius: 12px; padding: 1rem; }
+.tip-card h3 { font-size: 0.85rem; font-weight: 500; color: var(--blue); margin-bottom: 0.4rem; }
+.tip-card p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; margin: 0; }
+footer { background: var(--green); color: rgba(255,255,255,0.8); text-align: center; padding: 2rem; font-size: 0.8rem; margin-top: 3rem; }
+footer a { color: var(--mint); text-decoration: none; }
+@media (max-width: 600px) { .search-row { flex-direction: column; } nav { display: none; } .hero { padding: 2.5rem 1rem 2rem; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <a href="/" class="logo">Happy <span>Healthy</span> Karma</a>
+    <div class="tagline-small">Find care near you</div>
+  </div>
+  <nav>
+    <a href="/">Search</a>
+    <a href="/about.html">About</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Find a Dentist<br><em>near you</em></h1>
+  <p>Search by dental concern — we find the right dental provider near you</p>
+  <div class="search-box">
+    <div class="search-row">
+      <div class="input-group">
+        <label>Dental concern</label>
+        <span class="icon">🦷</span>
+        <input type="text" id="conditionInput" placeholder="e.g. tooth pain, braces, cleaning..." autocomplete="off" />
+      </div>
+      <div class="input-group">
+        <label>Your location</label>
+        <span class="icon">📍</span>
+        <input type="text" id="locationInput" placeholder="City, state or zip code..." />
+      </div>
+      <button class="btn-location" id="locBtn" onclick="detectLocation()">📍 Use my location</button>
+      <button class="btn-search" onclick="searchProviders()">Search →</button>
+    </div>
+    <div class="condition-tags">
+      <span>Popular:</span>
+      <button class="tag" onclick="quickSearch('tooth pain')">Tooth pain</button>
+      <button class="tag" onclick="quickSearch('teeth cleaning')">Cleaning</button>
+      <button class="tag" onclick="quickSearch('braces')">Braces</button>
+      <button class="tag" onclick="quickSearch('dental implants')">Implants</button>
+      <button class="tag" onclick="quickSearch('emergency dentist')">Emergency</button>
+      <button class="tag" onclick="quickSearch('wisdom teeth')">Wisdom teeth</button>
+      <button class="tag" onclick="quickSearch('pediatric dentist')">Kids dentist</button>
+    </div>
+  </div>
+</section>
+
+<main class="main">
+  <div class="disclaimer">
+    <span>ℹ️</span>
+    <span><strong>Medical disclaimer:</strong> Happy Healthy Karma helps you find local dental providers. This page does not provide medical advice, diagnosis, or treatment. Always consult a qualified dental professional. In a dental emergency, contact your dentist or go to the nearest emergency room.</span>
+  </div>
+
+  <div id="resultsSection" style="display:none">
+    <div class="results-header">
+      <div>
+        <div class="section-title" id="resultsTitle">Dentists near you</div>
+        <div class="results-count" id="resultsCount"></div>
+      </div>
+    </div>
+    <div id="map"></div>
+    <div class="results-grid" id="resultsGrid"></div>
+  </div>
+
+  <div class="loading" id="loadingState"><div class="spinner"></div><p>Finding dental providers near you...</p></div>
+  <div class="empty-state" id="emptyState"><p id="emptyMsg">No providers found.</p></div>
+
+  <div id="categoriesSection">
+    <div class="section-title">Browse by dental concern</div>
+    <div class="categories-grid">
+      <div class="category-card" onclick="quickSearch('tooth pain')"><div class="cat-icon">🦷</div><div class="cat-name">Tooth Pain</div><div class="cat-sub">General Dentist</div></div>
+      <div class="category-card" onclick="quickSearch('teeth cleaning')"><div class="cat-icon">✨</div><div class="cat-name">Teeth Cleaning</div><div class="cat-sub">General Dentist</div></div>
+      <div class="category-card" onclick="quickSearch('braces')"><div class="cat-icon">😁</div><div class="cat-name">Braces</div><div class="cat-sub">Orthodontist</div></div>
+      <div class="category-card" onclick="quickSearch('dental implants')"><div class="cat-icon">🔧</div><div class="cat-name">Dental Implants</div><div class="cat-sub">Oral Surgeon</div></div>
+      <div class="category-card" onclick="quickSearch('wisdom teeth')"><div class="cat-icon">🦴</div><div class="cat-name">Wisdom Teeth</div><div class="cat-sub">Oral Surgeon</div></div>
+      <div class="category-card" onclick="quickSearch('teeth whitening')"><div class="cat-icon">⭐</div><div class="cat-name">Teeth Whitening</div><div class="cat-sub">Cosmetic Dentist</div></div>
+      <div class="category-card" onclick="quickSearch('pediatric dentist')"><div class="cat-icon">👶</div><div class="cat-name">Kids Dentist</div><div class="cat-sub">Pediatric Dentist</div></div>
+      <div class="category-card" onclick="quickSearch('emergency dentist')"><div class="cat-icon">🚨</div><div class="cat-name">Emergency Dental</div><div class="cat-sub">Emergency Dentist</div></div>
+      <div class="category-card" onclick="quickSearch('gum disease')"><div class="cat-icon">🩺</div><div class="cat-name">Gum Disease</div><div class="cat-sub">Periodontist</div></div>
+      <div class="category-card" onclick="quickSearch('root canal')"><div class="cat-icon">💉</div><div class="cat-name">Root Canal</div><div class="cat-sub">Endodontist</div></div>
+      <div class="category-card" onclick="quickSearch('dentures')"><div class="cat-icon">😊</div><div class="cat-name">Dentures</div><div class="cat-sub">Prosthodontist</div></div>
+      <div class="category-card" onclick="quickSearch('dentist')"><div class="cat-icon">🏥</div><div class="cat-name">General Dentist</div><div class="cat-sub">Family Dentist</div></div>
+    </div>
+
+    <div class="info-section">
+      <h2>🦷 When should you see a dentist?</h2>
+      <p>Regular dental care is one of the most important parts of overall health. Many people avoid the dentist due to cost or anxiety — but catching problems early saves money and pain in the long run.</p>
+      <div class="tips-grid">
+        <div class="tip-card"><h3>Every 6 months</h3><p>Routine cleaning and checkup — the foundation of good dental health.</p></div>
+        <div class="tip-card"><h3>Tooth pain</h3><p>Don't wait — tooth pain rarely goes away on its own and can signal infection.</p></div>
+        <div class="tip-card"><h3>Bleeding gums</h3><p>Could be early gum disease — a periodontist can help before it gets worse.</p></div>
+        <div class="tip-card"><h3>Broken tooth</h3><p>See a dentist within 24 hours — a broken tooth can become infected quickly.</p></div>
+        <div class="tip-card"><h3>Wisdom teeth</h3><p>Most people need wisdom teeth removed between ages 17-25.</p></div>
+        <div class="tip-card"><h3>Children</h3><p>First dental visit by age 1 or when first tooth appears — pediatric dentists specialize in kids.</p></div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h2>💡 Types of dental specialists</h2>
+      <p>Not all dental concerns need the same type of provider. Here's a quick guide to dental specialists:</p>
+      <div class="tips-grid">
+        <div class="tip-card"><h3>General Dentist</h3><p>Cleanings, fillings, x-rays, basic extractions — your first stop for most dental needs.</p></div>
+        <div class="tip-card"><h3>Orthodontist</h3><p>Braces, Invisalign, bite correction — specializes in straightening teeth.</p></div>
+        <div class="tip-card"><h3>Oral Surgeon</h3><p>Wisdom teeth, implants, complex extractions, jaw surgery.</p></div>
+        <div class="tip-card"><h3>Periodontist</h3><p>Gum disease, gum recession, deep cleaning treatments.</p></div>
+        <div class="tip-card"><h3>Endodontist</h3><p>Root canals and infections inside the tooth.</p></div>
+        <div class="tip-card"><h3>Pediatric Dentist</h3><p>Dental care specifically for children — trained to work with kids.</p></div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p>2026 Happy Healthy Karma &middot; <a href="/privacy.html">Privacy Policy</a> &middot; <a href="/about.html">About</a> &middot; <a href="/">Find Other Providers</a></p>
+  <p style="margin-top:0.5rem;opacity:0.7;font-size:0.75rem">Provider data powered by OpenStreetMap contributors. Not a substitute for professional dental advice.</p>
+  <p style="margin-top:0.5rem;opacity:0.7;font-size:0.75rem">Happy Healthy Karma is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.com. We may also earn commissions from other affiliate partners at no additional cost to you.</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+var map = null, allResults = [], currentInfo = null;
+
+var conditionMap = {
+  'tooth pain':        { specialty: 'General Dentist',     query: 'dentist',              amenity: 'dentist' },
+  'teeth cleaning':    { specialty: 'General Dentist',     query: 'dentist cleaning',      amenity: 'dentist' },
+  'braces':            { specialty: 'Orthodontist',        query: 'orthodontist braces',   amenity: 'dentist' },
+  'orthodontist':      { specialty: 'Orthodontist',        query: 'orthodontist',          amenity: 'dentist' },
+  'dental implants':   { specialty: 'Oral Surgeon',        query: 'oral surgeon implants', amenity: 'dentist' },
+  'wisdom teeth':      { specialty: 'Oral Surgeon',        query: 'oral surgeon',          amenity: 'dentist' },
+  'teeth whitening':   { specialty: 'Cosmetic Dentist',    query: 'cosmetic dentist',      amenity: 'dentist' },
+  'cosmetic':          { specialty: 'Cosmetic Dentist',    query: 'cosmetic dentist',      amenity: 'dentist' },
+  'pediatric dentist': { specialty: 'Pediatric Dentist',   query: 'pediatric dentist',     amenity: 'dentist' },
+  'kids dentist':      { specialty: 'Pediatric Dentist',   query: 'pediatric dentist',     amenity: 'dentist' },
+  'emergency dentist': { specialty: 'Emergency Dentist',   query: 'emergency dentist',     amenity: 'dentist' },
+  'gum disease':       { specialty: 'Periodontist',        query: 'periodontist',          amenity: 'dentist' },
+  'root canal':        { specialty: 'Endodontist',         query: 'endodontist root canal',amenity: 'dentist' },
+  'dentures':          { specialty: 'Prosthodontist',      query: 'prosthodontist dentures',amenity: 'dentist' },
+  'dentist':           { specialty: 'General Dentist',     query: 'dentist',               amenity: 'dentist' }
+};
+
+function getSpecialty(condition) {
+  var lower = condition.toLowerCase();
+  for (var key in conditionMap) {
+    if (lower.indexOf(key) !== -1) return conditionMap[key];
+  }
+  return { specialty: 'General Dentist', query: 'dentist', amenity: 'dentist' };
+}
+
+function initMap(lat, lng) {
+  var mapEl = document.getElementById('map');
+  mapEl.style.display = 'block';
+  if (map) { setTimeout(function() { map.invalidateSize(); map.setView([lat, lng], 13); }, 100); return; }
+  map = L.map('map', { zoomControl: true }).setView([lat, lng], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', maxZoom: 19
+  }).addTo(map);
+  setTimeout(function() { map.invalidateSize(); }, 200);
+}
+
+function detectLocation() {
+  var btn = document.getElementById('locBtn');
+  btn.textContent = 'Detecting...'; btn.disabled = true;
+  if (!navigator.geolocation) { alert('Geolocation not supported.'); btn.textContent = '📍 Use my location'; btn.disabled = false; return; }
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    var lat = pos.coords.latitude, lng = pos.coords.longitude;
+    fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json&zoom=14&addressdetails=1', { headers: { 'Accept-Language': 'en' } })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var a = data.address || {};
+        var city = a.city || a.town || a.village || a.suburb || a.county || '';
+        var state = a.state_code ? a.state_code.toUpperCase() : '';
+        if (city) document.getElementById('locationInput').value = city + (state ? ', ' + state : '');
+        btn.textContent = '✅ Location set'; btn.disabled = false;
+      }).catch(function() { btn.textContent = '✅ Location set'; btn.disabled = false; });
+  }, function() { alert('Unable to detect location. Please enter manually.'); btn.textContent = '📍 Use my location'; btn.disabled = false; }, { timeout: 10000 });
+}
+
+function quickSearch(condition) {
+  document.getElementById('conditionInput').value = condition;
+  searchProviders();
+}
+
+function searchProviders() {
+  var condition = document.getElementById('conditionInput').value.trim();
+  var location = document.getElementById('locationInput').value.trim();
+  if (!condition) { document.getElementById('conditionInput').focus(); return; }
+  var info = getSpecialty(condition); currentInfo = info;
+  document.getElementById('categoriesSection').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('emptyState').classList.remove('show');
+  document.getElementById('loadingState').classList.add('show');
+
+  if (location) {
+    fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(location) + '&format=json&limit=1&countrycodes=us,ca')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data && data[0]) doSearch(info, parseFloat(data[0].lat), parseFloat(data[0].lon));
+        else { document.getElementById('loadingState').classList.remove('show'); showEmpty('Location not found. Please try a different location.'); }
+      }).catch(function() { document.getElementById('loadingState').classList.remove('show'); showEmpty('Error finding location. Please try again.'); });
+  } else if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function(pos) { doSearch(info, pos.coords.latitude, pos.coords.longitude); },
+      function() { document.getElementById('loadingState').classList.remove('show'); showEmpty('Please enter your location to search.'); }
+    );
+  } else { document.getElementById('loadingState').classList.remove('show'); showEmpty('Please enter your location.'); }
+}
+
+function doSearch(info, lat, lng) {
+  var HERE_API_KEY = 'dRnx8Wnk1r2SixL-wprqk1BdxYvBFdd0HmgUQXAcP5w';
+  var radius = 25000;
+
+  var hereUrl = 'https://discover.search.hereapi.com/v1/discover' +
+    '?in=circle:' + lat + ',' + lng + ';r=' + radius +
+    '&q=' + encodeURIComponent(info.query) +
+    '&limit=20&apikey=' + HERE_API_KEY;
+
+  var overpassQuery = '[out:json][timeout:25];(' +
+    'node["amenity"="dentist"](around:' + radius + ',' + lat + ',' + lng + ');' +
+    'way["amenity"="dentist"](around:' + radius + ',' + lat + ',' + lng + ');' +
+    ');out body;>;out skel qt;';
+  var overpassUrl = 'https://hhk-overpass-proxy.oping00.workers.dev/?data=' + encodeURIComponent(overpassQuery);
+
+  var merged = [], seen = {}, overpassDone = false;
+
+  function showLoadingMore() {
+    var existing = document.getElementById('loadingMoreIndicator');
+    if (!existing) {
+      var el = document.createElement('p');
+      el.id = 'loadingMoreIndicator';
+      el.style.cssText = 'text-align:center;color:var(--blue);font-size:1rem;font-weight:500;padding:1.5rem;grid-column:1/-1';
+      el.innerHTML = '<span style="display:inline-block;width:16px;height:16px;border:2px solid var(--blue-pale);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;margin-right:0.5rem;vertical-align:middle"></span>Loading more providers...';
+      document.getElementById('resultsGrid').appendChild(el);
+    }
+  }
+
+  function hideLoadingMore() {
+    var el = document.getElementById('loadingMoreIndicator');
+    if (el) el.remove();
+  }
+
+  function mergeAndRender(newResults, isOverpass) {
+    var added = false;
+    newResults.forEach(function(r) {
+      if (merged.length >= 25) return;
+      var key = r.title.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (!seen[key]) { seen[key] = true; merged.push(r); added = true; }
+    });
+    if (added && merged.length > 0) {
+      document.getElementById('loadingState').classList.remove('show');
+      allResults = merged.slice();
+      renderResults(merged, info, lat, lng);
+      if (!isOverpass && !overpassDone) showLoadingMore();
+    }
+    if (isOverpass) { overpassDone = true; hideLoadingMore(); }
+  }
+
+  fetch(hereUrl)
+    .then(function(r) { return r.ok ? r.json() : {items:[]}; })
+    .then(function(data) {
+      var results = (data.items || []).filter(function(item) { return item.title; }).map(function(item) {
+        return {
+          title: item.title,
+          lat: item.position && item.position.lat,
+          lng: item.position && item.position.lng,
+          address: item.address && item.address.label || '',
+          phone: item.contacts && item.contacts[0] && item.contacts[0].phone && item.contacts[0].phone[0] && item.contacts[0].phone[0].value || '',
+          website: item.contacts && item.contacts[0] && item.contacts[0].www && item.contacts[0].www[0] && item.contacts[0].www[0].value || '',
+          hours: item.openingHours && item.openingHours[0] && item.openingHours[0].text && item.openingHours[0].text[0] || ''
+        };
+      });
+      if (results.length > 0) mergeAndRender(results, false);
+    }).catch(function() {});
+
+  var overpassTimeout = setTimeout(function() {
+    if (!overpassDone) { overpassDone = true; hideLoadingMore(); }
+  }, 8000);
+
+  fetch(overpassUrl)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      clearTimeout(overpassTimeout);
+      var results = (data.elements || []).filter(function(el) { return el.tags && el.tags.name; }).map(function(el) {
+        var tags = el.tags || {};
+        var address = tags['addr:street'] ? tags['addr:street'] + (tags['addr:housenumber'] ? ' ' + tags['addr:housenumber'] : '') : (tags['addr:city'] || '');
+        return {
+          title: tags.name,
+          lat: el.lat || (el.center && el.center.lat),
+          lng: el.lon || (el.center && el.center.lon),
+          address: address,
+          phone: tags.phone || tags['contact:phone'] || '',
+          website: tags.website || '',
+          hours: tags.opening_hours || ''
+        };
+      });
+      if (results.length > 0) mergeAndRender(results, true);
+      else { overpassDone = true; hideLoadingMore(); if (merged.length === 0) { document.getElementById('loadingState').classList.remove('show'); showEmpty('No dental providers found nearby. Try a different location.'); } }
+    }).catch(function() { clearTimeout(overpassTimeout); overpassDone = true; hideLoadingMore(); });
+}
+
+function renderResults(results, info, centerLat, centerLng) {
+  document.getElementById('resultsTitle').textContent = info.specialty + ' near you';
+  document.getElementById('resultsCount').textContent = results.length + ' providers found';
+
+  initMap(centerLat || results[0].lat, centerLng || results[0].lng);
+
+  if (map) {
+    map.eachLayer(function(layer) { if (layer instanceof L.Marker) map.removeLayer(layer); });
+    var bounds = [];
+    results.forEach(function(place) {
+      if (!place.lat || !place.lng) return;
+      var icon = L.divIcon({
+        html: '<div style="background:#1E40AF;width:14px;height:14px;border-radius:50%;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3)"></div>',
+        className: '', iconSize: [14, 14], iconAnchor: [7, 7]
+      });
+      L.marker([place.lat, place.lng], {icon: icon}).addTo(map).bindPopup('<strong>' + place.title + '</strong><br>' + (place.address || ''));
+      bounds.push([place.lat, place.lng]);
+    });
+    if (bounds.length > 0) setTimeout(function() { map.fitBounds(bounds, {padding: [30, 30]}); }, 300);
+  }
+
+  document.getElementById('resultsGrid').innerHTML = results.map(function(p) {
+    var lat = p.lat || 0;
+    var lng = p.lng || 0;
+    var address = p.address || 'Address not available';
+    var phone = p.phone || '';
+    var googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.title + ' ' + address);
+    var safeName = p.title.replace(/'/g, "\\'");
+    return '<div class="provider-card">' +
+      '<div class="provider-header">' +
+      '<div class="provider-avatar">🦷</div>' +
+      '<div style="flex:1;min-width:0"><div class="provider-name">' + p.title + '</div>' +
+      '<div class="provider-specialty">' + info.specialty + '</div></div></div>' +
+      '<div class="provider-info">' +
+      '<div>📍 ' + address + '</div>' +
+      (phone ? '<div>📞 ' + phone + '</div>' : '') +
+      (p.website ? '<div>🌐 <a href="' + p.website + '" target="_blank" style="color:var(--blue-light)">Visit website</a></div>' : '') +
+      (p.hours ? '<div>🕐 ' + p.hours + '</div>' : '') +
+      '<div>⭐ <a href="' + googleMapsUrl + '" target="_blank" style="color:var(--blue-light)">View ratings & reviews on Google</a></div>' +
+      '</div>' +
+      '<div class="provider-actions">' +
+      (phone ? '<button class="btn-call" onclick="window.location.href=\'tel:' + phone + '\'">📞 Call</button>' : '') +
+      '<button class="btn-maps" onclick="getDirections(' + lat + ',' + lng + ',\'' + safeName + '\')">🗺️ Directions</button>' +
+      '</div></div>';
+  }).join('');
+  document.getElementById('resultsSection').style.display = 'block';
+}
+
+function getDirections(lat, lng, name) {
+  window.open('https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&destination_place_name=' + encodeURIComponent(name), '_blank');
+}
+
+function showEmpty(msg) {
+  document.getElementById('emptyMsg').textContent = msg || 'No providers found.';
+  document.getElementById('emptyState').classList.add('show');
+}
+
+document.getElementById('conditionInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') searchProviders(); });
+document.getElementById('locationInput').addEventListener('keypress', function(e) { if (e.key === 'Enter') searchProviders(); });
+
+// Auto search from URL parameters
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var condition = params.get('condition');
+  var location = params.get('location');
+  if (condition) {
+    document.getElementById('conditionInput').value = condition;
+    if (location) document.getElementById('locationInput').value = location;
+    searchProviders();
+  }
+})();
+</script>
+</body>
+</html>
