@@ -423,13 +423,13 @@ function showAmazonProducts(condition) {
 var map = null, allResults = [], currentInfo = null;
 
 var conditionMap = {
-  'ear pain':        { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'otolaryngologist',       mental: false },
-  'hearing loss':    { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'otolaryngologist',       mental: false },
-  'throat pain':     { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'otolaryngologist',       mental: false },
-  'sinus':           { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'otolaryngologist ENT',   mental: false },
-  'sinusitis':       { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'otolaryngologist ENT',   mental: false },
-  'nasal':           { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'otolaryngologist ENT',   mental: false },
-  'allergies':       { specialty: 'ENT / Allergist',           amenity: 'doctors',    query: 'allergist ENT',          mental: false },
+  'ear pain':        { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ear nose throat ENT clinic',  mental: false },
+  'hearing loss':    { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ear nose throat ENT hearing', mental: false },
+  'throat pain':     { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ear nose throat ENT clinic',  mental: false },
+  'sinus':           { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT sinus allergy clinic',    mental: false },
+  'sinusitis':       { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT sinus allergy clinic',    mental: false },
+  'nasal':           { specialty: 'ENT Specialist',            amenity: 'doctors',    query: 'ENT sinus nasal clinic',      mental: false },
+  'allergies':       { specialty: 'ENT / Allergist',           amenity: 'doctors',    query: 'allergy ENT clinic',          mental: false },
   'back pain':       { specialty: 'Orthopedic Specialist',     amenity: 'doctors',    query: 'orthopedic',             mental: false },
   'muscle pain':     { specialty: 'Physical Therapist',        amenity: 'doctors',    query: 'physical therapy',       mental: false },
   'joint pain':      { specialty: 'Orthopedic Specialist',     amenity: 'doctors',    query: 'orthopedic',             mental: false },
@@ -648,7 +648,7 @@ function doSearch(info, lat, lng) {
       overpassDone = true;
       hideLoadingMore();
     }
-  }, 4000);
+  }, 8000);
 
   // Add Overpass results when they arrive
   overpassPromise.then(function(overpassResults) {
