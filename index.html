@@ -149,6 +149,27 @@ nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
 .category-card.mental-cat:hover { border-color: #7C3AED; background: #F5F3FF; }
 .category-card.holistic-cat { border-color: #FDE68A; }
 .category-card.holistic-cat:hover { border-color: #D97706; background: #FFFBEB; }
+.telehealth-card { background: var(--white); border: 2px solid #534AB7; border-radius: 16px; padding: 1.25rem; position: relative; transition: transform 0.2s, box-shadow 0.2s; }
+.telehealth-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(83,74,183,0.2); }
+.telehealth-card.physical { border-color: #0F6E56; }
+.telehealth-badge { position: absolute; top: -1px; right: 12px; background: #534AB7; color: #EEEDFE; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 0 0 6px 6px; letter-spacing: 0.05em; }
+.telehealth-card.physical .telehealth-badge { background: #0F6E56; color: #E1F5EE; }
+.telehealth-card.soon { opacity: 0.7; border-color: #888780; }
+.telehealth-card.soon .telehealth-badge { background: #888780; color: #F1EFE8; }
+.telehealth-avatar { width: 40px; height: 40px; border-radius: 10px; background: #EEEDFE; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+.telehealth-card.physical .telehealth-avatar { background: #E1F5EE; }
+.telehealth-name { font-weight: 500; font-size: 0.95rem; color: var(--text); margin-bottom: 0.15rem; }
+.telehealth-specialty { font-size: 0.78rem; color: #534AB7; font-weight: 500; }
+.telehealth-card.physical .telehealth-specialty { color: #0F6E56; }
+.telehealth-info { font-size: 0.82rem; color: var(--text-muted); line-height: 1.8; margin-bottom: 0.75rem; }
+.telehealth-promo { color: #3C3489; font-weight: 500; font-size: 0.78rem; }
+.telehealth-card.physical .telehealth-promo { color: #085041; }
+.btn-telehealth { display: block; background: #534AB7; color: #EEEDFE; border: none; border-radius: 8px; padding: 0.55rem; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: background 0.2s; text-decoration: none; text-align: center; width: 100%; }
+.btn-telehealth:hover { background: #3C3489; }
+.telehealth-card.physical .btn-telehealth { background: #0F6E56; color: #E1F5EE; }
+.telehealth-card.physical .btn-telehealth:hover { background: #085041; }
+.telehealth-card.soon .btn-telehealth { background: #888780; color: #F1EFE8; cursor: default; }
+.telehealth-section-label { font-size: 0.72rem; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.6rem; margin-top: 0.25rem; }
 .cat-affiliates { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; justify-content: center; }
 .cat-affiliate-btn { background: #F0FDF4; color: var(--green); border: 1px solid var(--green-light); border-radius: 20px; padding: 0.2rem 0.6rem; font-size: 0.7rem; font-family: 'DM Sans', sans-serif; cursor: pointer; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
 .cat-affiliate-btn:hover { background: var(--green); color: white; }
@@ -702,7 +723,56 @@ function renderResults(results, info, centerLat, centerLng) {
     if (bounds.length > 0) setTimeout(function() { map.fitBounds(bounds, {padding: [30, 30]}); }, 300);
   }
 
-  document.getElementById('resultsGrid').innerHTML = results.map(function(p) {
+  var telehealthHTML = '';
+  if (info.mental) {
+    telehealthHTML = '<div class="telehealth-section-label" style="grid-column:1/-1">💻 Telehealth options — start today</div>' +
+      '<div class="telehealth-card">' +
+        '<div class="telehealth-badge">TELEHEALTH</div>' +
+        '<div class="provider-header" style="margin-top:0.5rem">' +
+          '<div class="telehealth-avatar">💙</div>' +
+          '<div style="flex:1;min-width:0"><div class="telehealth-name">Online-Therapy.com</div>' +
+          '<div class="telehealth-specialty">Therapist / Psychiatrist</div></div></div>' +
+        '<div class="telehealth-info">Licensed therapists available 24/7<br>Video, phone & chat sessions<br>' +
+          '<span class="telehealth-promo">Use code THERAPY20 — 20% off first month</span></div>' +
+        '<a href="/api/recommend?slug=online-therapy" target="_blank" class="btn-telehealth">Start Online Therapy →</a>' +
+      '</div>' +
+      '<div class="telehealth-card">' +
+        '<div class="telehealth-badge">TELEHEALTH</div>' +
+        '<div class="provider-header" style="margin-top:0.5rem">' +
+          '<div class="telehealth-avatar">💬</div>' +
+          '<div style="flex:1;min-width:0"><div class="telehealth-name">Talkspace</div>' +
+          '<div class="telehealth-specialty">Therapist / Psychiatrist</div></div></div>' +
+        '<div class="telehealth-info">Text, voice & video therapy<br>Match with a therapist today<br>' +
+          '<span class="telehealth-promo">Start as low as $69/week</span></div>' +
+        '<a href="/api/recommend?slug=talkspace" target="_blank" class="btn-telehealth">Start with Talkspace →</a>' +
+      '</div>' +
+      '<div class="telehealth-card soon">' +
+        '<div class="telehealth-badge">COMING SOON</div>' +
+        '<div class="provider-header" style="margin-top:0.5rem">' +
+          '<div class="telehealth-avatar">🌿</div>' +
+          '<div style="flex:1;min-width:0"><div class="telehealth-name">Calmerry</div>' +
+          '<div class="telehealth-specialty">Therapist / Counselor</div></div></div>' +
+        '<div class="telehealth-info">Personalized online therapy<br>Licensed therapists available<br>' +
+          '<span class="telehealth-promo">Starting at $50/week</span></div>' +
+        '<a class="btn-telehealth">Coming Soon</a>' +
+      '</div>' +
+      '<div style="grid-column:1/-1" class="telehealth-section-label" style="margin-top:0.75rem">🏥 Local providers near you</div>';
+  } else {
+    telehealthHTML = '<div class="telehealth-section-label" style="grid-column:1/-1">💻 Prefer to see a doctor online?</div>' +
+      '<div class="telehealth-card physical soon">' +
+        '<div class="telehealth-badge">COMING SOON</div>' +
+        '<div class="provider-header" style="margin-top:0.5rem">' +
+          '<div class="telehealth-avatar">🩺</div>' +
+          '<div style="flex:1;min-width:0"><div class="telehealth-name">Sesame Care</div>' +
+          '<div class="telehealth-specialty">Virtual Care — No Insurance Needed</div></div></div>' +
+        '<div class="telehealth-info">See a doctor online from $37<br>No insurance needed, no appointment required<br>' +
+          '<span class="telehealth-promo">Primary care, urgent care & more</span></div>' +
+        '<a class="btn-telehealth">Coming Soon</a>' +
+      '</div>' +
+      '<div style="grid-column:1/-1" class="telehealth-section-label" style="margin-top:0.75rem">🏥 Local providers near you</div>';
+  }
+
+  document.getElementById('resultsGrid').innerHTML = telehealthHTML + results.map(function(p) {
     var lat = p.lat || 0;
     var lng = p.lng || 0;
     var address = p.address || 'Address not available';
