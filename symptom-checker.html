@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Symptom Checker - Happy Healthy Karma</title>
+<meta name="description" content="Describe how you're feeling and our AI assistant will help point you toward the right type of doctor or mental health provider. Free, no signup required.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://happyhealthykarma.com/symptom-checker.html">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #2D6A4F; --green-light: #52B788; --green-pale: #D8F3DC;
+  --mint: #B7E4C7; --warm: #F9F3E8; --text: #1A2E1E;
+  --text-muted: #5C7A62; --white: #FFFFFF; --shadow: 0 4px 24px rgba(45,106,79,0.10);
+  --purple: #534AB7; --purple-pale: #EEEDFE;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'DM Sans', sans-serif; background: var(--warm); color: var(--text); min-height: 100vh; }
+header { background: var(--white); border-bottom: 1px solid var(--mint); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+.logo { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 600; color: var(--green); text-decoration: none; }
+.logo span { color: var(--green-light); }
+.tagline-small { font-size: 0.75rem; color: var(--text-muted); font-weight: 300; }
+nav a { text-decoration: none; color: var(--text-muted); font-size: 0.875rem; margin-left: 1.5rem; transition: color 0.2s; }
+nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
+.main { max-width: 720px; margin: 0 auto; padding: 2rem 1.5rem; }
+.page-title { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 400; color: var(--text); margin-bottom: 0.4rem; text-align: center; }
+.page-sub { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+.beta-badge { display: inline-block; background: var(--green-pale); color: var(--green); font-size: 0.7rem; font-weight: 500; padding: 0.2rem 0.6rem; border-radius: 12px; margin-left: 0.4rem; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.05em; }
+.disclaimer { background: var(--white); border: 1px solid var(--mint); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 0.75rem; }
+.mode-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.25rem; }
+.mode-tab { flex: 1; background: var(--white); border: 1.5px solid var(--mint); border-radius: 14px; padding: 0.75rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; color: var(--text-muted); cursor: pointer; text-align: center; transition: all 0.2s; }
+.mode-tab.active { background: var(--green); color: var(--white); border-color: var(--green); }
+.mode-tab.mental.active { background: var(--purple); border-color: var(--purple); }
+.crisis-banner { background: linear-gradient(135deg, #4C1D95, #6D28D9); border-radius: 14px; padding: 0.85rem 1.25rem; margin-bottom: 1rem; display: none; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.crisis-banner.show { display: flex; }
+.crisis-banner .label { color: rgba(255,255,255,0.85); font-size: 0.8rem; }
+.crisis-banner a { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 0.4rem 1rem; color: var(--white); text-decoration: none; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+.chat-window { background: var(--white); border-radius: 16px; padding: 1rem; height: 440px; overflow-y: auto; box-shadow: var(--shadow); margin-bottom: 1rem; display: flex; flex-direction: column; }
+.msg { max-width: 85%; padding: 0.7rem 1rem; border-radius: 14px; margin-bottom: 0.6rem; font-size: 0.88rem; line-height: 1.6; white-space: pre-wrap; }
+.msg.user { background: var(--green); color: var(--white); margin-left: auto; border-bottom-right-radius: 4px; }
+.msg.bot { background: var(--green-pale); color: var(--text); margin-right: auto; border-bottom-left-radius: 4px; }
+.msg.bot.mental { background: var(--purple-pale); }
+.suggest-box { margin-right: auto; max-width: 85%; margin-bottom: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.suggest-btn { display: inline-block; background: var(--green); color: var(--white); padding: 0.6rem 1rem; border-radius: 10px; text-decoration: none; font-size: 0.85rem; font-weight: 500; text-align: center; }
+.suggest-btn.telehealth { background: var(--purple); }
+.typing { color: var(--text-muted); font-size: 0.85rem; font-style: italic; margin-bottom: 0.6rem; }
+.chat-input-row { display: flex; gap: 0.5rem; }
+#chatInput { flex: 1; padding: 0.75rem 1rem; border: 1.5px solid var(--mint); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; outline: none; background: var(--white); }
+#chatInput:focus { border-color: var(--green-light); }
+#sendBtn { background: var(--green); color: var(--white); border: none; border-radius: 10px; padding: 0.75rem 1.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+#sendBtn:hover { background: #1B4332; }
+#sendBtn:disabled { opacity: 0.5; cursor: default; }
+.mental-active #sendBtn { background: var(--purple); }
+.mental-active #sendBtn:hover { background: #3C3489; }
+.restart-row { text-align: center; margin-top: 0.75rem; }
+.restart-row a { color: var(--text-muted); font-size: 0.8rem; text-decoration: underline; cursor: pointer; }
+footer { background: var(--green); color: rgba(255,255,255,0.8); text-align: center; padding: 2rem; font-size: 0.8rem; margin-top: 3rem; }
+footer a { color: var(--mint); text-decoration: none; }
+@media (max-width: 600px) { nav { display: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <a href="/" class="logo">Happy <span>Healthy</span> Karma</a>
+    <div class="tagline-small">Find care near you</div>
+  </div>
+  <nav>
+    <a href="/">Search</a>
+    <a href="/about.html">About</a>
+  </nav>
+</header>
+
+<main class="main">
+  <div class="page-title">AI Symptom Checker <span class="beta-badge">Beta · Free</span></div>
+  <div class="page-sub">Describe how you're feeling — we'll help point you toward the right type of care.</div>
+
+  <div class="disclaimer">
+    <span>ℹ️</span>
+    <span><strong>Not medical advice.</strong> This tool does not diagnose conditions. It only helps suggest what type of provider may be a good fit. Always consult a qualified professional. In an emergency, call 911.</span>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="generalTab" onclick="setMode('general')">🩺 General Symptom Checker</button>
+    <button class="mode-tab mental" id="mentalTab" onclick="setMode('mental')">🧠 Mental Health Checker</button>
+  </div>
+
+  <div class="crisis-banner" id="crisisBanner">
+    <span class="label">🧠 If you're in crisis, support is available right now.</span>
+    <a href="tel:988">Call or text 988</a>
+  </div>
+
+  <div class="chat-window" id="chatWindow"></div>
+
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Describe what's going on..." autocomplete="off" />
+    <button id="sendBtn" onclick="sendMessage()">Send</button>
+  </div>
+
+  <div class="restart-row"><a onclick="setMode(currentMode, true)">Start over</a></div>
+</main>
+
+<footer>
+  <p>2026 Happy Healthy Karma &middot; <a href="/privacy.html">Privacy Policy</a> &middot; <a href="/about.html">About</a> &middot; <a href="/">Find Providers</a></p>
+  <p style="margin-top:0.5rem;opacity:0.7;font-size:0.75rem">This tool is for informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment.</p>
+  <p style="margin-top:0.5rem;opacity:0.7;font-size:0.75rem">Happy Healthy Karma is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.com. We may also earn commissions from other affiliate partners at no additional cost to you.</p>
+</footer>
+
+<script>
+var currentMode = 'general';
+var history = { general: [], mental: [] };
+
+var GREETINGS = {
+  general: "Hi! I'm here to help you figure out what type of doctor might be a good fit. Describe what's going on — your symptoms, how long you've had them, and anything else that feels relevant.\n\nIf this is a medical emergency, please call 911 right away.",
+  mental: "Hi, I'm glad you're here. This is a space to talk through how you've been feeling — there's no wrong way to describe it. Take your time.\n\nIf you're in crisis or having thoughts of harming yourself, please call or text 988 (Suicide & Crisis Lifeline) right now — they're available 24/7."
+};
+
+function setMode(mode, restart) {
+  if (mode === currentMode && !restart) return;
+  currentMode = mode;
+  document.getElementById('generalTab').classList.toggle('active', mode === 'general');
+  document.getElementById('mentalTab').classList.toggle('active', mode === 'mental');
+  document.body.classList.toggle('mental-active', mode === 'mental');
+  document.getElementById('crisisBanner').classList.toggle('show', mode === 'mental');
+
+  if (restart) history[mode] = [];
+
+  if (history[mode].length === 0) {
+    renderChat();
+    addBotMessage(GREETINGS[mode], false);
+  } else {
+    renderChat();
+  }
+}
+
+function renderChat() {
+  var win = document.getElementById('chatWindow');
+  win.innerHTML = '';
+  history[currentMode].forEach(function(m) {
+    if (m.role === 'user') {
+      appendBubble(m.content, 'user');
+    } else {
+      appendAssistantMessage(m.content, false);
+    }
+  });
+  win.scrollTop = win.scrollHeight;
+}
+
+function appendBubble(text, who) {
+  var win = document.getElementById('chatWindow');
+  var div = document.createElement('div');
+  div.className = 'msg ' + who + (currentMode === 'mental' && who === 'bot' ? ' mental' : '');
+  div.textContent = text;
+  win.appendChild(div);
+  win.scrollTop = win.scrollHeight;
+}
+
+function appendAssistantMessage(rawText, isNew) {
+  var tagMatch = rawText.match(/\[SUGGEST:([a-z\-]+)\|([^\]]+)\]/);
+  var displayText = rawText.replace(/\[SUGGEST:[a-z\-]+\|[^\]]+\]/, '').trim();
+  appendBubble(displayText, 'bot');
+
+  if (tagMatch) {
+    var slug = tagMatch[1];
+    var label = tagMatch[2];
+    var win = document.getElementById('chatWindow');
+    var box = document.createElement('div');
+    box.className = 'suggest-box';
+
+    var findBtn = document.createElement('a');
+    findBtn.className = 'suggest-btn';
+    findBtn.href = '/?condition=' + encodeURIComponent(slug);
+    findBtn.textContent = '🔍 Find a ' + label + ' near you';
+    box.appendChild(findBtn);
+
+    if (currentMode === 'mental') {
+      var telehealthSlugs = ['anxiety','depression','stress','adhd','ptsd','couples-therapy','mental-health'];
+      var teleSlug = telehealthSlugs.indexOf(slug) !== -1 ? slug : 'mental-health';
+      var teleBtn = document.createElement('a');
+      teleBtn.className = 'suggest-btn telehealth';
+      teleBtn.href = '/api/recommend?slug=' + teleSlug;
+      teleBtn.target = '_blank';
+      teleBtn.textContent = '💙 Talk to a therapist online today';
+      box.appendChild(teleBtn);
+    }
+
+    win.appendChild(box);
+    win.scrollTop = win.scrollHeight;
+  }
+}
+
+function addBotMessage(text, saveToHistory) {
+  if (saveToHistory) history[currentMode].push({ role: 'assistant', content: text });
+  appendAssistantMessage(text, true);
+}
+
+function showTyping() {
+  var win = document.getElementById('chatWindow');
+  var div = document.createElement('div');
+  div.className = 'typing';
+  div.id = 'typingIndicator';
+  div.textContent = currentMode === 'mental' ? 'Thinking it through...' : 'Thinking...';
+  win.appendChild(div);
+  win.scrollTop = win.scrollHeight;
+}
+
+function hideTyping() {
+  var el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+function sendMessage() {
+  var input = document.getElementById('chatInput');
+  var text = input.value.trim();
+  if (!text) return;
+
+  appendBubble(text, 'user');
+  history[currentMode].push({ role: 'user', content: text });
+  input.value = '';
+  document.getElementById('sendBtn').disabled = true;
+  showTyping();
+
+  fetch('/api/symptom-checker', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: history[currentMode], mode: currentMode })
+  })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      hideTyping();
+      document.getElementById('sendBtn').disabled = false;
+      if (data.reply) {
+        addBotMessage(data.reply, true);
+      } else {
+        appendBubble("Sorry, something went wrong. Please try again in a moment.", 'bot');
+      }
+    })
+    .catch(function() {
+      hideTyping();
+      document.getElementById('sendBtn').disabled = false;
+      appendBubble("Sorry, something went wrong. Please try again in a moment.", 'bot');
+    });
+}
+
+document.getElementById('chatInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') sendMessage();
+});
+
+// Initialize
+setMode('general');
+</script>
+</body>
+</html>
