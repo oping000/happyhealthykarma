@@ -162,8 +162,8 @@ function appendBubble(text, who) {
 }
 
 function appendAssistantMessage(rawText, isNew) {
-  var tagMatch = rawText.match(/\[SUGGEST:([a-z\-]+)\|([^\]]+)\]/);
-  var displayText = rawText.replace(/\[SUGGEST:[a-z\-]+\|[^\]]+\]/, '').trim();
+  var tagMatch = rawText.match(/\[SUGGEST:([a-z\- ]+)\|([^\]]+)\]/);
+  var displayText = rawText.replace(/\[SUGGEST:[a-z\- ]+\|[^\]]+\]/, '').trim();
   appendBubble(displayText, 'bot');
 
   if (tagMatch) {
