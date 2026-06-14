@@ -103,6 +103,10 @@ nav a:hover, nav a.active { color: var(--green); font-weight: 500; }
 .tag.telehealth:hover { background: #157A5A; }
 .tag.mental { background: #E8D5F5; color: #6B21A8; }
 .tag.mental:hover { background: #6B21A8; color: var(--white); }
+@keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(127,119,221,0.5); } 50% { box-shadow: 0 0 0 4px rgba(127,119,221,0); } }
+.tag.premium { position: relative; background: linear-gradient(135deg, #534AB7, #7F77DD); color: #EEEDFE; border: none; border-radius: 20px; padding: 0.3rem 1rem 0.3rem 0.75rem; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer; transition: transform 0.2s; display: inline-flex; align-items: center; gap: 0.3rem; animation: pulseGlow 2.5s infinite; }
+.tag.premium:hover { transform: translateY(-1px); }
+.tag.premium .premium-badge { position: absolute; top: -7px; right: -6px; background: #EF9F27; color: #412402; font-size: 0.55rem; font-weight: 700; padding: 1px 5px; border-radius: 8px; letter-spacing: 0.04em; box-shadow: 0 1px 3px rgba(0,0,0,0.25); }
 .main { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
 .section-title { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 400; color: var(--text); margin-bottom: 1rem; }
 .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
@@ -222,6 +226,7 @@ footer a { color: var(--mint); text-decoration: none; }
       <button class="tag mental" onclick="quickSearch('depression')">Depression</button>
       <button class="tag mental" onclick="quickSearch('stress')">Stress</button>
       <button class="tag telehealth" onclick="showTelehealth()">💻 Telehealth</button>
+      <button class="tag premium" onclick="openPremiumModal()">✨ Symptom Checker<span class="premium-badge">AI</span></button>
     </div>
   </div>
 </section>
@@ -272,6 +277,28 @@ footer a { color: var(--mint); text-decoration: none; }
     </div>
   </div>
 
+  <div id="premiumModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:20px;padding:2rem;max-width:440px;width:90%;margin:0 auto;position:relative;text-align:center;">
+      <button onclick="document.getElementById('premiumModal').style.display='none'" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#5C7A62;">×</button>
+      <div style="width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#534AB7,#7F77DD);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 1rem;">🤖</div>
+      <div style="font-family:'Fraunces',serif;font-size:1.4rem;font-weight:400;color:#1A2E1E;margin-bottom:0.5rem;">Unlock the AI Symptom Checker</div>
+      <div style="font-size:0.88rem;color:#5C7A62;margin-bottom:1.25rem;line-height:1.7;">Not sure which specialist to see? Describe how you feel in plain English, and our AI assistant will help map your symptoms to the right local providers.</div>
+      <div style="background:#F9F3E8;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.25rem;text-align:left;">
+        <div style="font-size:0.7rem;font-weight:600;color:#534AB7;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.6rem;">Premium features include</div>
+        <div style="font-size:0.85rem;color:#1A2E1E;line-height:2;">
+          <div>✨ Unlimited AI Symptom Analysis</div>
+          <div>🎯 Advanced Specialist Modality Matching</div>
+          <div>📋 Mental Health Checker included</div>
+          <div>🔖 Saved Providers &amp; Health History</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0.6rem;">
+        <a href="/symptom-checker.html" style="background:linear-gradient(135deg,#534AB7,#7F77DD);color:#EEEDFE;border-radius:10px;padding:0.9rem 1.5rem;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;text-decoration:none;text-align:center;">✨ Try Free Beta →</a>
+        <button onclick="document.getElementById('premiumModal').style.display='none'" style="background:none;border:none;color:#5C7A62;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;padding:0.5rem;">Maybe later</button>
+      </div>
+    </div>
+  </div>
+
   <div id="resultsSection" style="display:none">
     <div class="results-header">
       <div>
@@ -305,6 +332,7 @@ footer a { color: var(--mint); text-decoration: none; }
   <div class="empty-state" id="emptyState"><div class="empty-emoji">🔍</div><p id="emptyMsg">No providers found.</p></div>
 
   <div id="categoriesSection">
+
     <div class="section-title">Browse by condition</div>
 
     <div style="font-family:'Fraunces',serif;font-size:1rem;font-weight:400;color:var(--text-muted);margin-bottom:0.6rem;margin-top:0.5rem;">🏥 Physical Health</div>
@@ -527,6 +555,10 @@ function detectLocation() {
 
 function showTelehealth() {
   document.getElementById('telehealthModal').style.display = 'flex';
+}
+
+function openPremiumModal() {
+  document.getElementById('premiumModal').style.display = 'flex';
 }
 
 function quickSearch(condition) {
