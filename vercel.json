@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/api/recommend", "destination": "/api/recommend.js" }
+    { "source": "/api/recommend", "destination": "/api/recommend.js" },
+    { "source": "/api/symptom-checker", "destination": "/api/symptom-checker.js" }
   ]
 }
