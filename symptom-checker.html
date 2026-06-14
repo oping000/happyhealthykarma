@@ -114,7 +114,7 @@ footer a { color: var(--mint); text-decoration: none; }
 
 <script>
 var currentMode = 'general';
-var history = { general: [], mental: [] };
+var chatHistory = { general: [], mental: [] };
 
 var GREETINGS = {
   general: "Hi! I'm here to help you figure out what type of doctor might be a good fit. Describe what's going on — your symptoms, how long you've had them, and anything else that feels relevant.\n\nIf this is a medical emergency, please call 911 right away.",
@@ -129,9 +129,9 @@ function setMode(mode, restart) {
   document.body.classList.toggle('mental-active', mode === 'mental');
   document.getElementById('crisisBanner').classList.toggle('show', mode === 'mental');
 
-  if (restart) history[mode] = [];
+  if (restart) chatHistory[mode] = [];
 
-  if (history[mode].length === 0) {
+  if (chatHistory[mode].length === 0) {
     renderChat();
     addBotMessage(GREETINGS[mode], false);
   } else {
@@ -142,7 +142,7 @@ function setMode(mode, restart) {
 function renderChat() {
   var win = document.getElementById('chatWindow');
   win.innerHTML = '';
-  history[currentMode].forEach(function(m) {
+  chatHistory[currentMode].forEach(function(m) {
     if (m.role === 'user') {
       appendBubble(m.content, 'user');
     } else {
@@ -196,7 +196,7 @@ function appendAssistantMessage(rawText, isNew) {
 }
 
 function addBotMessage(text, saveToHistory) {
-  if (saveToHistory) history[currentMode].push({ role: 'assistant', content: text });
+  if (saveToHistory) chatHistory[currentMode].push({ role: 'assistant', content: text });
   appendAssistantMessage(text, true);
 }
 
@@ -221,7 +221,7 @@ function sendMessage() {
   if (!text) return;
 
   appendBubble(text, 'user');
-  history[currentMode].push({ role: 'user', content: text });
+  chatHistory[currentMode].push({ role: 'user', content: text });
   input.value = '';
   document.getElementById('sendBtn').disabled = true;
   showTyping();
@@ -229,7 +229,7 @@ function sendMessage() {
   fetch('/api/symptom-checker', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: history[currentMode], mode: currentMode })
+    body: JSON.stringify({ messages: chatHistory[currentMode], mode: currentMode })
   })
     .then(function(r) { return r.json(); })
     .then(function(data) {
